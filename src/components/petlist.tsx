@@ -2,6 +2,7 @@
 
 import { usePetContext } from "@/hooks/pet-context-hook";
 import { Pet } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
@@ -10,12 +11,20 @@ type PetListProp = {
 };
 
 export default function PetList() {
-  const { pets } = usePetContext();
+  const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
   return (
     <ul className="bg-white border-b border-black/[0.08]">
       {pets.map((pet: Pet) => (
         <li key={pet.id}>
-          <button className="flex h-[70px] w-full cursor-pointer items-center px-5 text-base gap-3 focus:bg-[#eff1f2] hover:bg-[#eff1f2]">
+          <button
+            onClick={() => handleChangeSelectedPetId(pet.id)}
+            className={cn(
+              "flex h-[70px] w-full cursor-pointer items-center px-5 text-base gap-3 focus:bg-[#eff1f2] hover:bg-[#eff1f2]",
+              {
+                "bg-[#eff1f2]": selectedPetId === pet.id,
+              }
+            )}
+          >
             <Image
               src={pet.imageUrl}
               alt="pet image"
