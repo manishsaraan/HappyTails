@@ -9,9 +9,7 @@ export default function PetDetails() {
   return (
     <section className="w-full h-full flex flex-col">
       {!selectedPet ? (
-        <div className="h-full flex items-center justify-center">
-          <EmptyView />
-        </div>
+        <EmptyView />
       ) : (
         <>
           <Top selectedPet={selectedPet} />
@@ -24,11 +22,16 @@ export default function PetDetails() {
 }
 
 function EmptyView() {
-  return <p className="text-xl font-medium">No Pet Selected</p>;
+  return (
+    <div className="h-full flex items-center justify-center">
+      {" "}
+      <p className="text-xl font-medium">No Pet Selected</p>
+    </div>
+  );
 }
 function Notes({ selectedPet }: { selectedPet: Pet }) {
   return (
-    <section className="bg-white px-7 py-5 rounded-md mb-9 mx-8 flex-1 border border-black/[0.08]">
+    <section className="bg-white px-7 py-5 rounded-md mb-9 mx-8 flex-1 border border-light">
       {selectedPet?.notes}
     </section>
   );
@@ -51,7 +54,7 @@ function Info({ selectedPet }: { selectedPet: Pet }) {
 
 function Top({ selectedPet }: { selectedPet: Pet }) {
   return (
-    <div className="flex items-center bg-white px-8 py-5 border-b border-black/[0.08]">
+    <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
         src={selectedPet?.imageUrl}
         alt="pet image"
