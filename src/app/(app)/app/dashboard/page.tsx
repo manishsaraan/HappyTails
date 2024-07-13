@@ -1,10 +1,10 @@
 import Branding from "@/components/branding";
 import ContentBlock from "@/components/content-block";
-import H1 from "@/components/h1";
 import PetDetails from "@/components/pet-details";
 import PetList from "@/components/petlist";
 import SearchForm from "@/components/search-form";
 import Stats from "@/components/stats";
+import AddPetButton from "./add-pet-button";
 
 export default function Dashboard() {
   return (
@@ -18,9 +18,10 @@ export default function Dashboard() {
           <SearchForm />
         </div>
 
-        <div className="row-start-2 row-span-full col-start-1 col-span-1">
-          <ContentBlock>
+        <div className="relative row-start-2 row-span-full col-start-1 col-span-1">
+          <ContentBlock className="">
             <PetList />
+            <AddPetButton />
           </ContentBlock>
         </div>
         <div className="md:row-start-1 md:row-span-full md:col-start-2 md:col-span-full">
