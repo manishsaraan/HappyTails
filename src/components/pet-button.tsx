@@ -1,6 +1,19 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "./ui/input";
+import PetForm from "./pet-form";
 
 type PetButtonProps = {
   actionType: "add" | "edit" | "delete";
@@ -13,37 +26,31 @@ export default function PetButton({
   children,
   onHandleClick,
 }: PetButtonProps) {
-  if (actionType === "add") {
-    return (
-      <Button className="h-14 w-14" size={"icon"} onClick={onHandleClick}>
-        <PlusIcon />
-      </Button>
-    );
-  }
-
-  if (actionType === "edit") {
-    return (
-      <Button
-        className="bg-zinc-300 hover:bg-zinc-300"
-        variant={"secondary"}
-        onClick={onHandleClick}
-      >
-        {children}
-      </Button>
-    );
-  }
-
-  if (actionType === "delete") {
-    return (
-      <Button
-        className="bg-zinc-300 hover:bg-zinc-300"
-        variant={"secondary"}
-        onClick={onHandleClick}
-      >
-        {children}
-      </Button>
-    );
-  }
-
-  return null;
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {actionType === "add" ? (
+          <Button className="h-14 w-14" size={"icon"} onClick={onHandleClick}>
+            <PlusIcon />
+          </Button>
+        ) : (
+          <Button
+            className="bg-zinc-300 hover:bg-zinc-300"
+            variant={"secondary"}
+            onClick={onHandleClick}
+          >
+            {children}
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent>
+        <PetForm
+          onFormSubmission={() => setOpen(false)}
+          actionType={actionType}
+          heading="Add a new pet"
+        />
+      </DialogContent>
+    </Dialog>
+  );
 }
