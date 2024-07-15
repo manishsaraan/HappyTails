@@ -3,17 +3,10 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "./ui/input";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import PetForm from "./pet-form";
+import { usePetContext } from "@/hooks/pet-context-hook";
+import { Pet } from "@/lib/types";
 
 type PetButtonProps = {
   actionType: "add" | "edit" | "delete";
@@ -27,6 +20,18 @@ export default function PetButton({
   onHandleClick,
 }: PetButtonProps) {
   const [open, setOpen] = useState(false);
+  const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
+
+  const handlePetSubmission = (petData: Omit<Pet, "id">) => {
+    if (actionType === "add") {
+      handleAddPet(petData);
+    } else if (actionType === "edit") {
+      handleEditPet(petData, selectedPet!.id);
+    }
+
+    setOpen(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -46,9 +51,10 @@ export default function PetButton({
       </DialogTrigger>
       <DialogContent>
         <PetForm
-          onFormSubmission={() => setOpen(false)}
+          onFormSubmission={handlePetSubmission}
           actionType={actionType}
-          heading="Add a new pet"
+          heading={actionType === "add" ? "Add a new pet" : "Edit pet"}
+          selectedPet={selectedPet}
         />
       </DialogContent>
     </Dialog>
