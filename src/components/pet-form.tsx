@@ -34,22 +34,18 @@ export default function PetForm({
 
     // Create a FormData object from the form
     const formData = new FormData(form);
-    const name = formData.get("name") as string;
-    const owner = formData.get("owner") as string;
-    const imageUrl = formData.get("image-url") as string;
-    const age = parseInt(formData.get("age") as string);
-    const notes = formData.get("notes") as string;
+    const petData = {
+      name: formData.get("name") as string,
+      ownerName: formData.get("owner") as string,
+      imageUrl:
+        (formData.get("image-url") as string) ||
+        "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
+      age: parseInt(formData.get("age") as string),
+      notes: formData.get("notes") as string,
+    };
 
     // Convert FormData to a plain object
-    const petData = {
-      name: name,
-      ownerName: owner,
-      imageUrl:
-        imageUrl ||
-        "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
-      age: age,
-      notes: notes,
-    };
+
     // Log the pet data
     console.log("Pet Data:", petData);
 
