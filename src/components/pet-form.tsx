@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pet } from "@/lib/types";
+import { addPetAction } from "@/app/actions/actions";
 
 /**
  * PetForm component
@@ -56,7 +57,7 @@ export default function PetForm({
       <DialogHeader>
         <DialogTitle>{heading}</DialogTitle>
       </DialogHeader>
-      <form onSubmit={handleSubmit}>
+      <form action={addPetAction}>
         <div className="space-y-1  mb-4">
           <Label htmlFor="name">Name</Label>
           <Input
@@ -71,7 +72,7 @@ export default function PetForm({
           <Label htmlFor="owner">Owner</Label>
           <Input
             id="owner"
-            name="owner"
+            name="ownerName"
             type="text"
             defaultValue={actionType === "edit" ? selectedPet?.ownerName : ""}
             required
@@ -81,7 +82,7 @@ export default function PetForm({
           <Label htmlFor="image-url">Image URL</Label>
           <Input
             id="image-url"
-            name="image-url"
+            name="imageUrl"
             type="url"
             defaultValue={actionType === "edit" ? selectedPet?.imageUrl : ""}
             required
