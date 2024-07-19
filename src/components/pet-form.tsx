@@ -24,40 +24,20 @@ export default function PetForm({
 }: {
   heading: string;
   actionType: "add" | "edit" | "delete";
-  onFormSubmission: (petData: Omit<Pet, "id">) => void;
+  onFormSubmission: () => void;
   selectedPet?: Pet;
 }) {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // Get the form element
-    const form = event.currentTarget;
-
-    // Create a FormData object from the form
-    const formData = new FormData(form);
-    const petData = {
-      name: formData.get("name") as string,
-      ownerName: formData.get("owner") as string,
-      imageUrl:
-        (formData.get("image-url") as string) ||
-        "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
-      age: parseInt(formData.get("age") as string),
-      notes: formData.get("notes") as string,
-    };
-
-    // Convert FormData to a plain object
-
-    // Log the pet data
-    console.log("Pet Data:", petData);
-
-    onFormSubmission(petData);
+  const handleSubmit = async (formData: FormData) => {
+    console.log(formData);
+    onFormSubmission();
+    await addPetAction(formData);
   };
   return (
     <>
       <DialogHeader>
         <DialogTitle>{heading}</DialogTitle>
       </DialogHeader>
-      <form action={addPetAction}>
+      <form action={handleSubmit}>
         <div className="space-y-1  mb-4">
           <Label htmlFor="name">Name</Label>
           <Input

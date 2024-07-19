@@ -22,12 +22,12 @@ export default function PetButton({
   const [open, setOpen] = useState(false);
   const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
 
-  const handlePetSubmission = (petData: Omit<Pet, "id">) => {
-    if (actionType === "add") {
-      handleAddPet(petData);
-    } else if (actionType === "edit") {
-      handleEditPet(petData, selectedPet!.id);
-    }
+  const handlePetSubmission = () => {
+    // if (actionType === "add") {
+    //   handleAddPet(petData);
+    // } else if (actionType === "edit") {
+    //   handleEditPet(petData, selectedPet!.id);
+    // }
 
     setOpen(false);
   };

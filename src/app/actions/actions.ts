@@ -2,6 +2,7 @@
 
 import Prisma from "@/lib/db";
 import { Pet } from "@/lib/types";
+import { revalidatePath } from "next/cache";
 
 export const addPetAction = async (formData: FormData) => {
   console.log(formData);
@@ -14,4 +15,6 @@ export const addPetAction = async (formData: FormData) => {
       notes: formData.get("notes") as string,
     },
   });
+
+  revalidatePath("/app", "layout");
 };
