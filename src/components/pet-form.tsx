@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pet } from "@/lib/types";
 import { addPetAction } from "@/app/actions/actions";
+import { useFormState, useFormStatus } from "react-dom";
+import { toast } from "sonner";
 
 /**
  * PetForm component
@@ -27,10 +29,18 @@ export default function PetForm({
   onFormSubmission: () => void;
   selectedPet?: Pet;
 }) {
+  // const [state, formAction] = useFormState(addPetAction, {});
+
   const handleSubmit = async (formData: FormData) => {
     console.log(formData);
     onFormSubmission();
-    await addPetAction(formData);
+    const { error, success } = await addPetAction(formData);
+    if (error) {
+      toast.warning(error);
+      return;
+    }
+
+    toast.success(success);
   };
   return (
     <>
@@ -88,11 +98,22 @@ export default function PetForm({
           />
         </div>
         <DialogFooter>
-          <Button type="submit">
-            {actionType === "add" ? "Add a new pet" : "Edit a pet"}
-          </Button>
+          <SubmitButton actionType={actionType} />
         </DialogFooter>
       </form>
     </>
   );
 }
+
+const SubmitButton = ({
+  actionType,
+}: {
+  actionType: "add" | "edit" | "delete";
+}) => {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending}>
+      {actionType === "add" ? "Add a new pet" : "Edit a pet"}
+    </Button>
+  );
+};
