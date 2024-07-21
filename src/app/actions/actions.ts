@@ -60,3 +60,23 @@ export const editPetAction = async (
     return { error: "Failed to edit pet" };
   }
 };
+
+export const deletePetAction = async (
+  petId: string
+): Promise<{
+  success?: string;
+  error?: string;
+}> => {
+  try {
+    await sleep(2000);
+    await Prisma.pet.delete({
+      where: { id: petId },
+    });
+
+    revalidatePath("/app", "layout");
+    return { success: "Pet deleted successfully" };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to delete pet" };
+  }
+};

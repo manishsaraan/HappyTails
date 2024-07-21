@@ -20,7 +20,7 @@ export default function PetButton({
   onHandleClick,
 }: PetButtonProps) {
   const [open, setOpen] = useState(false);
-  const { handleAddPet, selectedPet, handleEditPet } = usePetContext();
+  const { selectedPet } = usePetContext();
 
   const handlePetSubmission = () => {
     // if (actionType === "add") {
@@ -32,23 +32,35 @@ export default function PetButton({
     setOpen(false);
   };
 
+  const handleSecondaryClick = () => {
+    if (actionType === "edit") {
+      setOpen(true);
+    } else {
+      setOpen(false);
+      onHandleClick?.();
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {actionType === "add" ? (
-          <Button className="h-14 w-14" size={"icon"} onClick={onHandleClick}>
-            <PlusIcon />
-          </Button>
-        ) : (
-          <Button
-            className="bg-zinc-300 hover:bg-zinc-300"
-            variant={"secondary"}
-            onClick={onHandleClick}
-          >
-            {children}
-          </Button>
-        )}
-      </DialogTrigger>
+      {actionType === "add" ? (
+        <Button
+          className="h-14 w-14"
+          size={"icon"}
+          onClick={() => setOpen(true)}
+        >
+          <PlusIcon />
+        </Button>
+      ) : (
+        <Button
+          className="bg-zinc-300 hover:bg-zinc-300"
+          variant={"secondary"}
+          onClick={handleSecondaryClick}
+        >
+          {children}
+        </Button>
+      )}
+
       <DialogContent>
         <PetForm
           onFormSubmission={handlePetSubmission}

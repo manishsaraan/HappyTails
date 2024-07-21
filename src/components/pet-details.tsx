@@ -4,6 +4,8 @@ import { usePetContext } from "@/hooks/pet-context-hook";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
 import PetButton from "./pet-button";
+import { deletePetAction } from "@/app/actions/actions";
+import { toast } from "sonner";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -54,7 +56,15 @@ function Info({ selectedPet }: { selectedPet: Pet }) {
 }
 
 function Top({ selectedPet }: { selectedPet: Pet }) {
-  const { handleCheckoutPet } = usePetContext();
+  const deletePet = async () => {
+    const result = await deletePetAction(selectedPet.id);
+    if (result.success) {
+      toast.success(result.success);
+    }
+    if (result.error) {
+      toast.error(result.error);
+    }
+  };
 
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
@@ -72,10 +82,7 @@ function Top({ selectedPet }: { selectedPet: Pet }) {
         <PetButton actionType="edit" onHandleClick={() => {}}>
           Edit
         </PetButton>
-        <PetButton
-          actionType="delete"
-          onHandleClick={() => handleCheckoutPet(selectedPet.id)}
-        >
+        <PetButton actionType="delete" onHandleClick={deletePet}>
           Checkout
         </PetButton>
       </div>
