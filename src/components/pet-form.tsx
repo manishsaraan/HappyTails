@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pet } from "@/lib/types";
-import { addPetAction } from "@/app/actions/actions";
+import { addPetAction, editPetAction } from "@/app/actions/actions";
 import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "sonner";
 
@@ -33,14 +33,21 @@ export default function PetForm({
 
   const handleSubmit = async (formData: FormData) => {
     console.log(formData);
-    onFormSubmission();
-    const { error, success } = await addPetAction(formData);
-    if (error) {
-      toast.warning(error);
+
+    let result;
+    if (actionType === "add") {
+      result = await addPetAction(formData);
+    } else if (actionType === "edit") {
+      result = await editPetAction(formData, selectedPet!.id);
+    }
+
+    if (result && result.error) {
+      toast.warning(result.error);
       return;
     }
 
-    toast.success(success);
+    onFormSubmission();
+    toast.success(result?.success);
   };
   return (
     <>
