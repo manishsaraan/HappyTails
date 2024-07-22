@@ -6,6 +6,7 @@ import Image from "next/image";
 import PetButton from "./pet-button";
 import { deletePetAction } from "@/app/actions/actions";
 import { toast } from "sonner";
+import { useTransition } from "react";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -56,14 +57,18 @@ function Info({ selectedPet }: { selectedPet: Pet }) {
 }
 
 function Top({ selectedPet }: { selectedPet: Pet }) {
+  const [isPending, startTransition] = useTransition();
+
   const deletePet = async () => {
-    const result = await deletePetAction(selectedPet.id);
-    if (result.success) {
-      toast.success(result.success);
-    }
-    if (result.error) {
-      toast.error(result.error);
-    }
+    startTransition(async () => {
+      const result = await deletePetAction(selectedPet.id);
+      if (result.success) {
+        toast.success(result.success);
+      }
+      if (result.error) {
+        toast.error(result.error);
+      }
+    });
   };
 
   return (
@@ -79,10 +84,18 @@ function Top({ selectedPet }: { selectedPet: Pet }) {
         {selectedPet?.name}
       </h2>
       <div className="ml-auto space-x-3">
-        <PetButton actionType="edit" onHandleClick={() => {}}>
+        <PetButton
+          disabled={isPending}
+          actionType="edit"
+          onHandleClick={() => {}}
+        >
           Edit
         </PetButton>
-        <PetButton actionType="delete" onHandleClick={deletePet}>
+        <PetButton
+          disabled={isPending}
+          actionType="delete"
+          onHandleClick={deletePet}
+        >
           Checkout
         </PetButton>
       </div>

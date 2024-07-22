@@ -12,12 +12,14 @@ type PetButtonProps = {
   actionType: "add" | "edit" | "delete";
   children: React.ReactNode;
   onHandleClick?: () => void;
+  disabled?: boolean;
 };
 
 export default function PetButton({
   actionType,
   children,
   onHandleClick,
+  disabled,
 }: PetButtonProps) {
   const [open, setOpen] = useState(false);
   const { selectedPet } = usePetContext();
@@ -48,6 +50,7 @@ export default function PetButton({
           className="h-14 w-14"
           size={"icon"}
           onClick={() => setOpen(true)}
+          disabled={disabled}
         >
           <PlusIcon />
         </Button>
@@ -56,6 +59,7 @@ export default function PetButton({
           className="bg-zinc-300 hover:bg-zinc-300"
           variant={"secondary"}
           onClick={handleSecondaryClick}
+          disabled={disabled}
         >
           {children}
         </Button>
