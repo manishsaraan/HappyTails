@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import PetForm from "./pet-form";
 import { usePetContext } from "@/hooks/pet-context-hook";
 import { Pet } from "@/lib/types";
+import { flushSync } from "react-dom";
 
 type PetButtonProps = {
   actionType: "add" | "edit" | "delete";
@@ -31,7 +32,9 @@ export default function PetButton({
     //   handleEditPet(petData, selectedPet!.id);
     // }
 
-    setOpen(false);
+    flushSync(() => {
+      setOpen(false);
+    });
   };
 
   const handleSecondaryClick = () => {
@@ -50,7 +53,6 @@ export default function PetButton({
           className="h-14 w-14"
           size={"icon"}
           onClick={() => setOpen(true)}
-          disabled={disabled}
         >
           <PlusIcon />
         </Button>
@@ -59,7 +61,6 @@ export default function PetButton({
           className="bg-zinc-300 hover:bg-zinc-300"
           variant={"secondary"}
           onClick={handleSecondaryClick}
-          disabled={disabled}
         >
           {children}
         </Button>

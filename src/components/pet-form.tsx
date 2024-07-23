@@ -11,9 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pet } from "@/lib/types";
-import { addPetAction, editPetAction } from "@/app/actions/actions";
-import { useFormState, useFormStatus } from "react-dom";
-import { toast } from "sonner";
+import { useFormStatus } from "react-dom";
+import { usePetContext } from "@/hooks/pet-context-hook";
 
 /**
  * PetForm component
@@ -30,24 +29,24 @@ export default function PetForm({
   selectedPet?: Pet;
 }) {
   // const [state, formAction] = useFormState(addPetAction, {});
-
+  const { handleAddPet, handleEditPet } = usePetContext();
   const handleSubmit = async (formData: FormData) => {
     console.log(formData);
+    onFormSubmission(); // closing it before action because of optimitic ui
+    const petData = {
+      name: formData.get("name") as string,
+      age: parseInt(formData.get("age") as string),
+      ownerName: formData.get("ownerName") as string,
+      imageUrl: formData.get("imageUrl") as string,
+      notes: formData.get("notes") as string,
+    };
 
     let result;
     if (actionType === "add") {
-      result = await addPetAction(formData);
+      result = await handleAddPet(petData);
     } else if (actionType === "edit") {
-      result = await editPetAction(formData, selectedPet!.id);
+      result = await handleEditPet(petData, selectedPet!.id);
     }
-
-    if (result && result.error) {
-      toast.warning(result.error);
-      return;
-    }
-
-    onFormSubmission();
-    toast.success(result?.success);
   };
   return (
     <>

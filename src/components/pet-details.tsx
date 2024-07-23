@@ -57,18 +57,10 @@ function Info({ selectedPet }: { selectedPet: Pet }) {
 }
 
 function Top({ selectedPet }: { selectedPet: Pet }) {
-  const [isPending, startTransition] = useTransition();
+  const { handleCheckoutPet } = usePetContext();
 
   const deletePet = async () => {
-    startTransition(async () => {
-      const result = await deletePetAction(selectedPet.id);
-      if (result.success) {
-        toast.success(result.success);
-      }
-      if (result.error) {
-        toast.error(result.error);
-      }
-    });
+    await handleCheckoutPet(selectedPet.id);
   };
 
   return (
@@ -84,18 +76,10 @@ function Top({ selectedPet }: { selectedPet: Pet }) {
         {selectedPet?.name}
       </h2>
       <div className="ml-auto space-x-3">
-        <PetButton
-          disabled={isPending}
-          actionType="edit"
-          onHandleClick={() => {}}
-        >
+        <PetButton actionType="edit" onHandleClick={() => {}}>
           Edit
         </PetButton>
-        <PetButton
-          disabled={isPending}
-          actionType="delete"
-          onHandleClick={deletePet}
-        >
+        <PetButton actionType="delete" onHandleClick={deletePet}>
           Checkout
         </PetButton>
       </div>

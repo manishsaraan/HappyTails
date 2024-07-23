@@ -6,7 +6,7 @@ import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 export const addPetAction = async (
-  formData: FormData
+  formData: Omit<Pet, "id">
 ): Promise<{
   success?: string;
   error?: string;
@@ -15,13 +15,7 @@ export const addPetAction = async (
     console.log(formData);
     await sleep(2000);
     await Prisma.pet.create({
-      data: {
-        name: formData.get("name") as string,
-        age: parseInt(formData.get("age") as string),
-        ownerName: formData.get("ownerName") as string,
-        imageUrl: formData.get("imageUrl") as string,
-        notes: formData.get("notes") as string,
-      },
+      data: formData,
     });
 
     revalidatePath("/app", "layout");
@@ -33,7 +27,7 @@ export const addPetAction = async (
 };
 
 export const editPetAction = async (
-  formData: FormData,
+  formData: Omit<Pet, "id">,
   petId: string
 ): Promise<{
   success?: string;
@@ -44,13 +38,7 @@ export const editPetAction = async (
     await sleep(2000);
     await Prisma.pet.update({
       where: { id: petId },
-      data: {
-        name: formData.get("name") as string,
-        age: parseInt(formData.get("age") as string),
-        ownerName: formData.get("ownerName") as string,
-        imageUrl: formData.get("imageUrl") as string,
-        notes: formData.get("notes") as string,
-      },
+      data: formData,
     });
 
     revalidatePath("/app", "layout");
