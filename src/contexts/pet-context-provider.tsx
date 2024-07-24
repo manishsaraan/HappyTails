@@ -5,27 +5,19 @@ import {
   deletePetAction,
   editPetAction,
 } from "@/app/actions/actions";
-import { Pet } from "@/lib/types";
-import React, {
-  useState,
-  createContext,
-  useOptimistic,
-  startTransition,
-} from "react";
+import { Pet, PetData, PetId } from "@/lib/types";
+import React, { useState, createContext, useOptimistic } from "react";
 import { toast } from "sonner";
 
 type PetContextType = {
   pets: Pet[];
-  selectedPetId: string | null;
+  selectedPetId: PetId | null;
   selectedPet: Pet | undefined;
   noOfPets: number;
-  handleChangeSelectedPetId: (id: string) => void;
-  handleCheckoutPet: (id: string) => Promise<void>;
-  handleAddPet: (formData: Omit<Pet, "id">) => Promise<void>;
-  handleEditPet: (
-    formData: Omit<Pet, "id">,
-    selectedPetId: string
-  ) => Promise<void>;
+  handleChangeSelectedPetId: (id: PetId) => void;
+  handleCheckoutPet: (id: PetId) => Promise<void>;
+  handleAddPet: (formData: PetData) => Promise<void>;
+  handleEditPet: (formData: PetData, selectedPetId: PetId) => Promise<void>;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -61,17 +53,17 @@ export default function PetContextProvider({
       }
     }
   );
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  const [selectedPetId, setSelectedPetId] = useState<PetId | null>(null);
 
   // derived State
   const selectedPet = optimisticPets.find((pet) => pet.id === selectedPetId);
   const noOfPets = optimisticPets.length;
   // handlers
-  const handleChangeSelectedPetId = (id: string) => {
+  const handleChangeSelectedPetId = (id: PetId) => {
     setSelectedPetId(id);
   };
 
-  const handleCheckoutPet = async (petId: string) => {
+  const handleCheckoutPet = async (petId: PetId) => {
     // setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
     setOptimisticPets({
       action: "delete",
@@ -88,7 +80,7 @@ export default function PetContextProvider({
     setSelectedPetId(null);
   };
 
-  const handleAddPet = async (petData: Omit<Pet, "id">) => {
+  const handleAddPet = async (petData: PetData) => {
     setOptimisticPets({ action: "add", payload: petData });
 
     const result = await addPetAction(petData);
@@ -100,10 +92,7 @@ export default function PetContextProvider({
     toast.success(result?.success);
   };
 
-  const handleEditPet = async (
-    formData: Omit<Pet, "id">,
-    selectedPetId: string
-  ) => {
+  const handleEditPet = async (formData: PetData, selectedPetId: PetId) => {
     setOptimisticPets({
       action: "edit",
       payload: { id: selectedPetId, data: formData },

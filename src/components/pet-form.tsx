@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Pet } from "@/lib/types";
+import { Pet, PetData } from "@/lib/types";
 import { useFormStatus } from "react-dom";
 import { usePetContext } from "@/hooks/pet-context-hook";
 
@@ -39,7 +39,7 @@ export default function PetForm({
       ownerName: formData.get("ownerName") as string,
       imageUrl: formData.get("imageUrl") as string,
       notes: formData.get("notes") as string,
-    };
+    } as PetData;
 
     let result;
     if (actionType === "add") {
@@ -116,9 +116,8 @@ const SubmitButton = ({
 }: {
   actionType: "add" | "edit" | "delete";
 }) => {
-  const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit">
       {actionType === "add" ? "Add a new pet" : "Edit a pet"}
     </Button>
   );

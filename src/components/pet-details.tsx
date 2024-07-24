@@ -4,9 +4,6 @@ import { usePetContext } from "@/hooks/pet-context-hook";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
 import PetButton from "./pet-button";
-import { deletePetAction } from "@/app/actions/actions";
-import { toast } from "sonner";
-import { useTransition } from "react";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -46,11 +43,11 @@ function Info({ selectedPet }: { selectedPet: Pet }) {
     <div className="flex justify-around py-10 px-5 text-center">
       <div>
         <h3 className="text-[13px] text-zinc-700 font-medium">Owner Name</h3>
-        <p className="mt-1 text-lg text-zinc-800">{selectedPet?.ownerName}</p>
+        <p className="mt-1 text-lg text-zinc-800">{selectedPet.ownerName}</p>
       </div>
       <div>
         <h3 className="text-[13px] text-zinc-700 font-medium">Age</h3>
-        <p className="mt-1 text-lg text-zinc-800">{selectedPet?.age}</p>
+        <p className="mt-1 text-lg text-zinc-800">{selectedPet.age}</p>
       </div>
     </div>
   );
@@ -73,7 +70,7 @@ function Top({ selectedPet }: { selectedPet: Pet }) {
         className="h-[75px] w-[75px] rounded-full object-cover"
       />
       <h2 className="text-3xl font-semibold leading-7 ml-5">
-        {selectedPet?.name}
+        {selectedPet.name}
       </h2>
       <div className="ml-auto space-x-3">
         <PetButton actionType="edit" onHandleClick={() => {}}>

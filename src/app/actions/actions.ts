@@ -1,19 +1,19 @@
 "use server";
 
 import Prisma from "@/lib/db";
-import { Pet } from "@/lib/types";
+import { PetData, PetId } from "@/lib/types";
 import { sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 export const addPetAction = async (
-  formData: Omit<Pet, "id">
+  formData: PetData
 ): Promise<{
   success?: string;
   error?: string;
 }> => {
   try {
     console.log(formData);
-    await sleep(2000);
+    await sleep(1000);
     await Prisma.pet.create({
       data: formData,
     });
@@ -27,15 +27,15 @@ export const addPetAction = async (
 };
 
 export const editPetAction = async (
-  formData: Omit<Pet, "id">,
-  petId: string
+  formData: PetData,
+  petId: PetId
 ): Promise<{
   success?: string;
   error?: string;
 }> => {
   try {
     console.log(formData);
-    await sleep(2000);
+    await sleep(1000);
     await Prisma.pet.update({
       where: { id: petId },
       data: formData,
@@ -50,13 +50,13 @@ export const editPetAction = async (
 };
 
 export const deletePetAction = async (
-  petId: string
+  petId: PetId
 ): Promise<{
   success?: string;
   error?: string;
 }> => {
   try {
-    await sleep(2000);
+    await sleep(1000);
     await Prisma.pet.delete({
       where: { id: petId },
     });
