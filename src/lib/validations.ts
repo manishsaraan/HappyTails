@@ -37,3 +37,4 @@ export const petSchema = z.object({
 // });
 
 export type TPetFormData = z.infer<typeof petSchema>;
+export const petIdSchema = z.string().cuid();

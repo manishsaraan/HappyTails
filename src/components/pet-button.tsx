@@ -23,7 +23,7 @@ export default function PetButton({
   disabled,
 }: PetButtonProps) {
   const [open, setOpen] = useState(false);
-  const { selectedPet } = usePetContext();
+  const { selectedPet, setSelectedPetId } = usePetContext();
 
   const handlePetSubmission = () => {
     // if (actionType === "add") {
@@ -52,7 +52,10 @@ export default function PetButton({
         <Button
           className="h-14 w-14"
           size={"icon"}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setSelectedPetId(null);
+            setOpen(true);
+          }}
         >
           <PlusIcon />
         </Button>
