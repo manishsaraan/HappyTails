@@ -39,13 +39,16 @@ export default function PetForm({
     getValues,
   } = useForm<TPetFormData>({
     resolver: zodResolver(petSchema),
-    defaultValues: {
-      name: selectedPet?.name || "",
-      age: selectedPet?.age || 0,
-      ownerName: selectedPet?.ownerName || "",
-      imageUrl: selectedPet?.imageUrl || "",
-      notes: selectedPet?.notes || "",
-    },
+    defaultValues:
+      actionType === "edit"
+        ? {
+            name: selectedPet?.name || "",
+            age: selectedPet?.age || 0,
+            ownerName: selectedPet?.ownerName || "",
+            imageUrl: selectedPet?.imageUrl || "",
+            notes: selectedPet?.notes || "",
+          }
+        : {},
   });
 
   const onSubmit: SubmitHandler<TPetFormData> = async (data) => {

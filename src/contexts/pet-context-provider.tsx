@@ -18,7 +18,6 @@ type PetContextType = {
   handleCheckoutPet: (id: PetId) => Promise<void>;
   handleAddPet: (formData: PetData) => Promise<void>;
   handleEditPet: (formData: PetData, selectedPetId: PetId) => Promise<void>;
-  setSelectedPetId: (id: PetId | null) => void;
 };
 
 export const PetContext = createContext<PetContextType | null>(null);
@@ -122,7 +121,6 @@ export default function PetContextProvider({
         handleCheckoutPet,
         handleAddPet,
         handleEditPet,
-        setSelectedPetId,
       }}
     >
       {children}

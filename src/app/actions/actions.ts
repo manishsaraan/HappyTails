@@ -1,5 +1,6 @@
 "use server";
 
+import { signIn } from "@/lib/auth";
 import Prisma from "@/lib/db";
 import { PetData, PetId } from "@/lib/types";
 import { sleep } from "@/lib/utils";
@@ -86,4 +87,32 @@ export const deletePetAction = async (
     console.error(error);
     return { error: "Failed to delete pet" };
   }
+};
+
+// user actions
+export const logInAction = async (
+  formData: FormData
+): Promise<{
+  success?: string;
+  error?: string;
+}> => {
+  const data = Object.fromEntries(formData.entries());
+  console.log(data);
+
+  const result = signIn("credentials", {
+    email: data.email,
+    password: data.password,
+  });
+
+  if (result?.error) {
+    console.error("Login failed:", result.error);
+    return { error: result.error };
+  }
+
+  if (result?.ok) {
+    console.log("Login successful, redirecting...");
+    window.location.href = "/app/dashboard"; // Adjust the redirect URL as needed
+  }
+
+  return result;
 };

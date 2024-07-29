@@ -7,7 +7,7 @@ export default function Signup() {
   return (
     <div className="w-[300px]">
       <H1 className="text-center">Signup</H1>
-      <AuthForm />
+      <AuthForm type="register" />
       <p className="mt-4">
         No Account yet?{" "}
         <Link className="text-zinc-500 mt-5 text-sm" href="/login">
