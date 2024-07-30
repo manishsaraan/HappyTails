@@ -68,9 +68,15 @@ const config = {
         return false;
       }
 
-      if (!tryingToAccessApp) {
+      if (isLoggedIn && !tryingToAccessApp) {
+        return Response.redirect(new URL("/app/dashboard", request.nextUrl));
+      }
+
+      if (!isLoggedIn && !tryingToAccessApp) {
         return true;
       }
+
+      return false;
     },
   },
   secret: process.env.AUTH_SECRET,
