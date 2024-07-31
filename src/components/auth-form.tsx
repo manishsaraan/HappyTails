@@ -1,11 +1,15 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { logInAction } from "@/app/actions/actions";
+import { logInAction, registerAction } from "@/app/actions/actions";
+import prisma from "@/lib/db";
 
 const AuthForm = ({ type }: { type: "login" | "register" }) => {
   return (
-    <form action={logInAction} className="space-y-2">
+    <form
+      action={type === "login" ? logInAction : registerAction}
+      className="space-y-2"
+    >
       <div className="space-y-1">
         <label htmlFor="email">Email</label>
         <Input type="email" id="email" name="email" required />

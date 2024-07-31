@@ -1,11 +1,13 @@
 "use server";
 
 import { signIn } from "@/lib/auth";
-import Prisma from "@/lib/db";
+import prisma from "@/lib/db";
 import { PetData, PetId } from "@/lib/types";
 import { sleep } from "@/lib/utils";
 import { petIdSchema, petSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
 
 export const addPetAction = async (
   formData: unknown
@@ -21,7 +23,7 @@ export const addPetAction = async (
     }
 
     await sleep(1000);
-    await Prisma.pet.create({
+    await prisma.pet.create({
       data: result.data,
     });
 
@@ -51,7 +53,7 @@ export const editPetAction = async (
       return { error: "Invalid form data" };
     }
 
-    await Prisma.pet.update({
+    await prisma.pet.update({
       where: { id: parsedPetId.data },
       data: result.data,
     });
@@ -77,7 +79,7 @@ export const deletePetAction = async (
     }
 
     await sleep(1000);
-    await Prisma.pet.delete({
+    await prisma.pet.delete({
       where: { id: parsedPetId.data },
     });
 
@@ -96,13 +98,7 @@ export const logInAction = async (
   success?: string;
   error?: string;
 }> => {
-  const data = Object.fromEntries(formData.entries());
-  console.log(data);
-
-  const result = signIn("credentials", {
-    email: data.email,
-    password: data.password,
-  });
+  const result = await signIn("credentials", formData);
 
   if (result?.error) {
     console.error("Login failed:", result.error);
@@ -111,8 +107,25 @@ export const logInAction = async (
 
   if (result?.ok) {
     console.log("Login successful, redirecting...");
-    window.location.href = "/app/dashboard"; // Adjust the redirect URL as needed
+    redirect("/app/dashboard");
   }
 
   return result;
+};
+
+export const registerAction = async (formData: FormData) => {
+  const password = formData.get("password") as string;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = {
+    email: formData.get("email") as string,
+    hashedPassword: hashedPassword,
+  };
+
+  console.log(user);
+
+  await prisma.user.create({
+    data: user,
+  });
+
+  await logInAction(formData);
 };
