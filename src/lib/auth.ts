@@ -49,9 +49,6 @@ const config = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      return session;
-    },
     authorized({ request, auth }) {
       const isLoggedIn = !!auth?.user;
       const tryingToAccessApp = request.nextUrl.pathname.startsWith("/app");
@@ -77,6 +74,21 @@ const config = {
       }
 
       return false;
+    },
+    jwt({ token, user }) {
+      // for server
+      if (user) {
+        token.userId = user.id;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      // for client
+      if (session.user) {
+        session.user.id = token.userId as string;
+      }
+
+      return session;
     },
   },
   secret: process.env.AUTH_SECRET,
