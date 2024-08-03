@@ -3,14 +3,11 @@ import H1 from "@/components/h1";
 import SignOutBtn from "@/components/sign-out-btn";
 import { Button } from "@/components/ui/button";
 import { auth, signOut } from "@/lib/auth";
+import { checkAuth } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
 
 export default async function Account() {
-  const session = await auth();
-  if (!session) {
-    return redirect("/login");
-  }
-
+  const session = await checkAuth();
   async function handleSignOut() {
     "use server";
 
