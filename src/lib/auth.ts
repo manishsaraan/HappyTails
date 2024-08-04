@@ -2,6 +2,7 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "./server-utils";
+import { authSchema, TAuthFormData } from "./validations";
 
 const config = {
   pages: {
@@ -14,12 +15,15 @@ const config = {
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
+        const result = authSchema.safeParse(credentials);
+        console.log(result, "********************result");
+        if (!result.success) {
+          return null;
+        }
 
-        const user = await getUserByEmail(email.trim().toLowerCase());
+        const user = await getUserByEmail(
+          result.data.email.trim().toLowerCase()
+        );
         console.log(user, "user   ");
 
         if (!user) {
@@ -28,7 +32,7 @@ const config = {
         }
 
         const passwordMatch = await bcrypt.compare(
-          password,
+          result.data.password,
           user.hashedPassword
         );
 
@@ -90,4 +94,9 @@ const config = {
   secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig;
 
-export const { handlers, auth, signIn, signOut } = NextAuth(config);
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth(config);

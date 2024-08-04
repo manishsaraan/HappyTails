@@ -38,3 +38,15 @@ export const petSchema = z.object({
 
 export type TPetFormData = z.infer<typeof petSchema>;
 export const petIdSchema = z.string().cuid();
+
+export const authSchema = z.object({
+  email: z
+    .string()
+    .max(100, "Email must be at most 100 characters long")
+    .email("Invalid email address"),
+  password: z
+    .string()
+    .max(100, "Password must be at most 100 characters long")
+    .min(3, "Password must be at least 8 characters long"),
+});
+export type TAuthFormData = z.infer<typeof authSchema>;

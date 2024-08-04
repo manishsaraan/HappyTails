@@ -17,7 +17,7 @@ export default async function Account() {
   return (
     <main>
       <H1 className="py-8 text-white">Your Account</H1>
-      <ContentBlock className="h-[500px] flex justify-center items-center">
+      <ContentBlock className="h-[500px] flex justify-center flex-col items-center space-y-2">
         <p>Logged in as {session?.user?.email}</p>
         <SignOutBtn onClick={handleSignOut} />
       </ContentBlock>

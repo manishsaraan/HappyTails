@@ -2,13 +2,10 @@
 
 import { signIn } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { auth } from "@/lib/auth";
-import { PetData, PetId } from "@/lib/types";
 import { sleep } from "@/lib/utils";
-import { petIdSchema, petSchema } from "@/lib/validations";
+import { authSchema, petIdSchema, petSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
-import { redirect } from "next/navigation";
 import { checkAuth, createPet, getPetByPetId } from "@/lib/server-utils";
 import { AuthError } from "next-auth";
 
@@ -135,7 +132,7 @@ export const deletePetAction = async (
 
 // user actions
 export const logInAction = async (
-  formData: FormData
+  formData: unknown
 ): Promise<{
   success?: string;
   error?: string;
@@ -147,6 +144,7 @@ export const logInAction = async (
   }
 
   try {
+    console.log(formData, "********************login");
     await signIn("credentials", formData);
     return { success: "Login successful" };
   } catch (error) {
@@ -169,15 +167,27 @@ export const logInAction = async (
   }
 };
 
-export const registerAction = async (formData: FormData) => {
-  const password = formData.get("password") as string;
+export const registerAction = async (formData: unknown) => {
+  if (!(formData instanceof FormData)) {
+    return {
+      error: "Invalid form data.",
+    };
+  }
+
+  const input = Object.fromEntries(formData.entries());
+  const result = authSchema.safeParse(input);
+  if (!result.success) {
+    return {
+      error: "Invalid form data.",
+    };
+  }
+
+  const password = result.data.password;
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = {
-    email: formData.get("email") as string,
+    email: result.data.email,
     hashedPassword: hashedPassword,
   };
-
-  console.log(user);
 
   await prisma.user.create({
     data: user,
