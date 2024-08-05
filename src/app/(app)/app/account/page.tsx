@@ -4,13 +4,15 @@ import SignOutBtn from "@/components/sign-out-btn";
 import { Button } from "@/components/ui/button";
 import { auth, signOut } from "@/lib/auth";
 import { checkAuth } from "@/lib/server-utils";
+import { sleep } from "@/lib/utils";
 import { redirect } from "next/navigation";
+import { useTransition } from "react";
 
 export default async function Account() {
   const session = await checkAuth();
+
   async function handleSignOut() {
     "use server";
-
     await signOut({ redirectTo: "/" });
   }
 

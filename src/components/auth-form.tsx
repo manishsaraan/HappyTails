@@ -1,13 +1,18 @@
+"use client";
+
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { logInAction, registerAction } from "@/app/actions/actions";
-import prisma from "@/lib/db";
+import { AuthFormBtn } from "./auth-form-btn";
+import { useFormState } from "react-dom";
 
 const AuthForm = ({ type }: { type: "login" | "register" }) => {
+  const [signupError, dispatchSignup] = useFormState(registerAction, undefined);
+  const [loginError, dispatchLogin] = useFormState(logInAction, undefined);
+
   return (
     <form
-      action={type === "login" ? logInAction : registerAction}
+      action={type === "login" ? dispatchLogin : dispatchSignup}
       className="space-y-2"
     >
       <div className="space-y-1">
@@ -18,8 +23,14 @@ const AuthForm = ({ type }: { type: "login" | "register" }) => {
         <label htmlFor="password">Password</label>
         <Input type="password" id="password" name="password" required />
       </div>
+      {type === "register" && signupError && (
+        <p className="text-red-500">{signupError.error}</p>
+      )}
+      {type === "login" && loginError && (
+        <p className="text-red-500">{loginError.error}</p>
+      )}
       <div className="space-y-1">
-        <Button type="submit">{type === "login" ? "Login" : "Register"}</Button>
+        <AuthFormBtn type={type} />
       </div>
     </form>
   );

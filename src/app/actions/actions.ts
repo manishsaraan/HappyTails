@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { checkAuth, createPet, getPetByPetId } from "@/lib/server-utils";
 import { AuthError } from "next-auth";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const addPetAction = async (
   formData: unknown
@@ -23,7 +24,6 @@ export const addPetAction = async (
       return { error: "Invalid form data" };
     }
 
-    await sleep(1000);
     await createPet({
       data: {
         ...result.data,
@@ -53,7 +53,6 @@ export const editPetAction = async (
   try {
     const session = await checkAuth();
     console.log(formData);
-    await sleep(1000);
 
     const result = petSchema.safeParse(formData);
 
@@ -103,7 +102,6 @@ export const deletePetAction = async (
       return { error: "Invalid pet ID" };
     }
 
-    await sleep(1000);
     const pet = await getPetByPetId(parsedPetId.data, {
       userId: true,
       id: true,
@@ -132,6 +130,7 @@ export const deletePetAction = async (
 
 // user actions
 export const logInAction = async (
+  prevState: unknown,
   formData: unknown
 ): Promise<{
   success?: string;
@@ -152,12 +151,12 @@ export const logInAction = async (
       switch (error.type) {
         case "CredentialsSignin": {
           return {
-            error: "Invalid credentials.",
+            error: "Wrong email or password.",
           };
         }
         default: {
           return {
-            error: "Error. Could not sign in.",
+            error: "Error.1 Could not sign in.",
           };
         }
       }
@@ -167,7 +166,7 @@ export const logInAction = async (
   }
 };
 
-export const registerAction = async (formData: unknown) => {
+export const registerAction = async (prevState: unknown, formData: unknown) => {
   if (!(formData instanceof FormData)) {
     return {
       error: "Invalid form data.",
@@ -189,9 +188,19 @@ export const registerAction = async (formData: unknown) => {
     hashedPassword: hashedPassword,
   };
 
-  await prisma.user.create({
-    data: user,
-  });
+  try {
+    await prisma.user.create({
+      data: user,
+    });
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return { error: "User already exists" };
+      }
+    }
+    console.error(error);
+    return { error: "Failed to register" };
+  }
 
-  await logInAction(formData);
+  await logInAction(prevState, formData);
 };
