@@ -32,7 +32,7 @@ export const petSchema = z.object({
 //     age: Number(data.age),
 //     imageUrl:
 //       data.imageUrl ||
-//       "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
+//       "/images/placeholder.png",
 //   };
 // });
 

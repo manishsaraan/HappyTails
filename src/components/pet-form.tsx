@@ -76,8 +76,7 @@ export default function PetForm({
           const formDataObj: TPetFormData = getValues();
 
           formDataObj.imageUrl =
-            formDataObj.imageUrl ||
-            "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png";
+            formDataObj.imageUrl || "/images/placeholder.png";
           await onSubmit(formDataObj);
         }}
       >

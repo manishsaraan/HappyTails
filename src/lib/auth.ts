@@ -16,7 +16,7 @@ const config = {
     CredentialsProvider({
       async authorize(credentials) {
         const result = authSchema.safeParse(credentials);
-        console.log(result, "********************result");
+
         if (!result.success) {
           return null;
         }
@@ -41,9 +41,6 @@ const config = {
           return null;
         }
 
-        console.log(
-          "User exists and validation*******************************"
-        );
         return user;
       },
     }),
@@ -52,12 +49,8 @@ const config = {
     authorized({ request, auth }) {
       const isLoggedIn = !!auth?.user;
       const tryingToAccessApp = request.nextUrl.pathname.startsWith("/app");
-      console.log(
-        isLoggedIn,
-        "*******tryingToAccessApp*************",
-        tryingToAccessApp
-      );
-      if (isLoggedIn && tryingToAccessApp) {
+
+      if (isLoggedIn && tryingToAccessApp && auth?.user.hasAccess) {
         return true;
       }
 
@@ -65,8 +58,40 @@ const config = {
         return false;
       }
 
-      if (isLoggedIn && !tryingToAccessApp) {
+      if (
+        isLoggedIn &&
+        (request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/payment") ||
+          request.nextUrl.pathname.includes("/signup")) &&
+        auth?.user.hasAccess
+      ) {
         return Response.redirect(new URL("/app/dashboard", request.nextUrl));
+      }
+
+      if (isLoggedIn && !tryingToAccessApp && !auth?.user.hasAccess) {
+        if (
+          request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/signup")
+        ) {
+          console.log("redirecting to payment");
+
+          return Response.redirect(new URL("/payment", request.nextUrl));
+        }
+        console.log("returning true");
+        return true;
+      }
+
+      if (isLoggedIn && !tryingToAccessApp && !auth?.user.hasAccess) {
+        if (
+          request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/signup")
+        ) {
+          console.log("redirecting to payment");
+
+          return Response.redirect(new URL("/payment", request.nextUrl));
+        }
+        console.log("returning true");
+        return true;
       }
 
       if (!isLoggedIn && !tryingToAccessApp) {
@@ -75,18 +100,29 @@ const config = {
 
       return false;
     },
-    jwt({ token, user }) {
-      // for server
+    async jwt({ token, user, trigger }) {
+      // for login user will be set for first time
       if (user) {
         token.userId = user.id;
+        token.hasAccess = user.hasAccess;
+        token.email = user.email as string;
       }
+
+      if (trigger === "update") {
+        // for every reqeust
+        const user = await getUserByEmail(token.email);
+        if (user) {
+          token.hasAccess = user.hasAccess;
+        }
+      }
+
       return token;
     },
     session({ session, token }) {
       // for client
-      if (session.user) {
-        session.user.id = token.userId as string;
-      }
+      session.user.id = token.userId as string;
+      session.user.hasAccess = token.hasAccess as boolean;
+      session.user.email = token.email as string;
 
       return session;
     },

@@ -1,0 +1,11 @@
+upload image
+add upi payment
+add admin dashboard
+add analytics
+add payment for lifetime access
+add payment for monthly access
+add payment for yearly access
+add payment for lifetime access
+add payment for monthly access
+add payment for yearly access
+proper logging of events

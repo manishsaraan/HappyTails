@@ -27,6 +27,7 @@ model User {
   id             String   @id @default(cuid())
   email          String   @unique
   hashedPassword String
+  hasAccess      Boolean  @default(false)
   pets           Pet[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

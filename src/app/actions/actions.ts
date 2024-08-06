@@ -6,9 +6,17 @@ import { sleep } from "@/lib/utils";
 import { authSchema, petIdSchema, petSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
-import { checkAuth, createPet, getPetByPetId } from "@/lib/server-utils";
+import {
+  checkAuth,
+  createPet,
+  getPetByPetId,
+  getUserByEmail,
+} from "@/lib/server-utils";
 import { AuthError } from "next-auth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { redirect } from "next/navigation";
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY!);
 
 export const addPetAction = async (
   formData: unknown
@@ -145,6 +153,7 @@ export const logInAction = async (
   try {
     console.log(formData, "********************login");
     await signIn("credentials", formData);
+    redirect("/app/dashboard");
     return { success: "Login successful" };
   } catch (error) {
     if (error instanceof AuthError) {
@@ -203,4 +212,31 @@ export const registerAction = async (prevState: unknown, formData: unknown) => {
   }
 
   await logInAction(prevState, formData);
+};
+
+export const createCheckoutSession = async () => {
+  const session = await checkAuth();
+  if (!session) {
+    return { error: "Not authorized" };
+  }
+
+  const user = await getUserByEmail(session.user.email as string);
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  const stripeSession = await stripe.checkout.sessions.create({
+    customer_email: user.email,
+    line_items: [
+      {
+        price: process.env.STRIPE_PRICE_ID,
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment?success=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment?cancelled=false`,
+  });
+  console.log(stripeSession, "stripeSession");
+  redirect(stripeSession.url);
 };
