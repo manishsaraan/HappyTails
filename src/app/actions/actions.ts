@@ -3,7 +3,7 @@
 import { signIn } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { sleep } from "@/lib/utils";
-import { authSchema, petIdSchema, petSchema } from "@/lib/validations";
+import { authSchema, petIdSchema, petSchemaWithImage } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import {
@@ -27,11 +27,12 @@ export const addPetAction = async (
   try {
     const session = await checkAuth();
 
-    const result = petSchema.safeParse(formData);
+    const result = petSchemaWithImage.safeParse(formData);
     if (!result.success) {
       return { error: "Invalid form data" };
     }
 
+    console.log(result.data, "result.data");
     await createPet({
       data: {
         ...result.data,

@@ -83,6 +83,7 @@ export default function PetContextProvider({
   const handleAddPet = async (petData: PetData) => {
     setOptimisticPets({ action: "add", payload: petData });
 
+    console.log(petData, "insdie context");
     const result = await addPetAction(petData);
     if (result && result.error) {
       toast.warning(result.error);

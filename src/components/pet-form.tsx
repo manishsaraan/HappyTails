@@ -1,9 +1,6 @@
-"use client";
-
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   DialogHeader,
   DialogTitle,
@@ -15,11 +12,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pet, PetData } from "@/lib/types";
 import { usePetContext } from "@/hooks/pet-context-hook";
-import { petSchema, TPetFormData } from "@/lib/validations";
+import {
+  basePetSchema,
+  petSchemaWithoutImage,
+  TPetFormData,
+} from "@/lib/validations";
+import UploadImageBtn from "./upload-image-btn";
+import { toast } from "sonner";
 
-/**
- * PetForm component
- */
 export default function PetForm({
   heading,
   actionType,
@@ -32,32 +32,40 @@ export default function PetForm({
   selectedPet?: Pet;
 }) {
   const { handleAddPet, handleEditPet } = usePetContext();
+  const [imageFile, setImageFile] = useState<string | null>(null);
+
   const {
     register,
     trigger,
     formState: { errors },
     getValues,
   } = useForm<TPetFormData>({
-    resolver: zodResolver(petSchema),
+    resolver: zodResolver(petSchemaWithoutImage),
     defaultValues:
       actionType === "edit"
         ? {
             name: selectedPet?.name || "",
             age: selectedPet?.age || 0,
             ownerName: selectedPet?.ownerName || "",
-            imageUrl: selectedPet?.imageUrl || "",
             notes: selectedPet?.notes || "",
           }
         : {},
   });
 
+  console.log(errors, getValues());
+  const handleImageUpload = async (imageUrl: string) => {
+    setImageFile(imageUrl);
+  };
+
   const onSubmit: SubmitHandler<TPetFormData> = async (data) => {
     onFormSubmission(); // closing it before action because of optimistic UI
-    let result;
+
+    // Perform the necessary actions, like adding or editing the pet
     if (actionType === "add") {
-      result = await handleAddPet(data);
+      console.log({ ...data, imageUrl: imageFile }, "imageFile");
+      handleAddPet({ ...data, imageUrl: imageFile || "" });
     } else if (actionType === "edit") {
-      result = await handleEditPet(data, selectedPet!.id);
+      //  handleEditPet({ ...data, id: selectedPet!.id });
     }
   };
 
@@ -67,17 +75,13 @@ export default function PetForm({
         <DialogTitle>{heading}</DialogTitle>
       </DialogHeader>
       <form
-        action={async () => {
-          const result = await trigger();
-          if (!result) {
-            return;
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const isValid = await trigger();
+          if (isValid) {
+            const formDataObj: TPetFormData = getValues();
+            await onSubmit(formDataObj);
           }
-
-          const formDataObj: TPetFormData = getValues();
-
-          formDataObj.imageUrl =
-            formDataObj.imageUrl || "/images/placeholder.png";
-          await onSubmit(formDataObj);
         }}
       >
         <div className="space-y-1 mb-4">
@@ -96,10 +100,7 @@ export default function PetForm({
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="image-url">Image URL</Label>
-          <Input id="image-url" {...register("imageUrl")} />
-          {errors.imageUrl && (
-            <span className="text-red-500">{errors.imageUrl.message}</span>
-          )}
+          <UploadImageBtn onUpload={handleImageUpload} />
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="age">Age</Label>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const petSchema = z.object({
+export const basePetSchema = z.object({
   name: z
     .string()
     .trim()
@@ -11,10 +11,6 @@ export const petSchema = z.object({
     .trim()
     .min(2, "Owner must be at least 2 characters long")
     .max(20, "Owner must be at most 20 characters long"),
-  imageUrl: z.union([
-    z.literal(""),
-    z.string().trim().url("Image URL must be a valid URL"),
-  ]),
   age: z.coerce
     .number()
     .int()
@@ -26,6 +22,15 @@ export const petSchema = z.object({
     z.string().trim().min(2, "Notes must be at least 2 characters long"),
   ]),
 });
+
+export const petSchemaWithImage = basePetSchema.extend({
+  imageUrl: z.union([
+    z.literal(""),
+    z.string().trim().url("Image URL must be a valid URL"),
+  ]),
+});
+
+export const petSchemaWithoutImage = basePetSchema;
 // .transform((data) => {
 //   return {
 //     ...data,
@@ -36,7 +41,8 @@ export const petSchema = z.object({
 //   };
 // });
 
-export type TPetFormData = z.infer<typeof petSchema>;
+export type TPetFormData = z.infer<typeof basePetSchema>;
+export type TPetFormDataWithImage = z.infer<typeof petSchemaWithImage>;
 export const petIdSchema = z.string().cuid();
 
 export const authSchema = z.object({
