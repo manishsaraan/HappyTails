@@ -3,9 +3,10 @@
 import { getSupabaseSignedUrl, uploadSupabaseImage } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import { CircleCheck, CircleX } from "lucide-react";
+import { CircleCheck, CircleX, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 const LoadingSpinner = ({ className }: { className: string }) => {
   return (
@@ -28,8 +29,10 @@ const LoadingSpinner = ({ className }: { className: string }) => {
 
 export default function UploadImageBtn({
   onUpload,
+  imageUrl,
 }: {
   onUpload: (url: string) => void;
+  imageUrl?: string | null;
 }) {
   const [isUploading, setIsUploading] = useState(false);
   const [isError, setIsError] = useState<string | null>(null);
@@ -97,7 +100,7 @@ export default function UploadImageBtn({
             document.getElementById("upload-input")?.click(); // Triggers file input
           }}
         >
-          Upload Image
+          {imageUrl ? "Replace Image" : "Upload Image"}
         </Button>
       </label>
 
@@ -109,6 +112,20 @@ export default function UploadImageBtn({
       )}
       {isUploading && <LoadingSpinner className="w-4 h-4" />}
       {isSuccess && <CircleCheck size={20} color="green" strokeWidth={2} />}
+      {imageUrl && (
+        <div className="flex items-center gap-2">
+          <Image
+            src={imageUrl}
+            alt="Uploaded"
+            width={40}
+            height={40}
+            className="w-10 h-10 object-cover rounded-full"
+          />
+          <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+            <ExternalLink size={20} />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

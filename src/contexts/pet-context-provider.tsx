@@ -106,9 +106,6 @@ export default function PetContextProvider({
     }
 
     toast.success(result?.success);
-    // setPets((prevPets) =>
-    //   prevPets.map((p) => (p.id === selectedPetId ? { ...p, ...pet } : p))
-    // );
   };
 
   return (

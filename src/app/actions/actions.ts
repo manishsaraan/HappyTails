@@ -63,7 +63,7 @@ export const editPetAction = async (
     const session = await checkAuth();
     console.log(formData);
 
-    const result = petSchema.safeParse(formData);
+    const result = petSchemaWithImage.safeParse(formData);
 
     const parsedPetId = petIdSchema.safeParse(petId);
 
@@ -152,7 +152,6 @@ export const logInAction = async (
   }
 
   try {
-    console.log(formData, "********************login");
     await signIn("credentials", formData);
     redirect("/app/dashboard");
     return { success: "Login successful" };

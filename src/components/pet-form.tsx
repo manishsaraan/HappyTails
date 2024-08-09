@@ -61,11 +61,13 @@ export default function PetForm({
     onFormSubmission(); // closing it before action because of optimistic UI
 
     // Perform the necessary actions, like adding or editing the pet
+    const imageUrl = imageFile || "";
+
     if (actionType === "add") {
-      console.log({ ...data, imageUrl: imageFile }, "imageFile");
-      handleAddPet({ ...data, imageUrl: imageFile || "" });
+      console.log({ ...data, imageUrl }, "imageFile");
+      handleAddPet({ ...data, imageUrl });
     } else if (actionType === "edit") {
-      //  handleEditPet({ ...data, id: selectedPet!.id });
+      handleEditPet({ ...data, imageUrl }, selectedPet!.id);
     }
   };
 
@@ -100,7 +102,10 @@ export default function PetForm({
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="image-url">Image URL</Label>
-          <UploadImageBtn onUpload={handleImageUpload} />
+          <UploadImageBtn
+            imageUrl={actionType === "edit" ? selectedPet?.imageUrl : null}
+            onUpload={handleImageUpload}
+          />
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="age">Age</Label>

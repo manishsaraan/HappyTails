@@ -21,8 +21,6 @@ export default async function Layout({
     redirect("/login");
   }
 
-  console.log(session, "*****************");
-
   const pets = await getPetsByUserId(session.user.id);
 
   return (
