@@ -81,16 +81,7 @@ const config = {
         return true;
       }
 
-      if (isLoggedIn && !tryingToAccessApp && !auth?.user.hasAccess) {
-        if (
-          request.nextUrl.pathname.includes("/login") ||
-          request.nextUrl.pathname.includes("/signup")
-        ) {
-          console.log("redirecting to payment");
-
-          return Response.redirect(new URL("/payment", request.nextUrl));
-        }
-        console.log("returning true");
+      if (isLoggedIn && !tryingToAccessApp) {
         return true;
       }
 

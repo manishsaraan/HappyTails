@@ -4,6 +4,7 @@ import { usePetContext } from "@/hooks/pet-context-hook";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
 import PetButton from "./pet-button";
+import PetImage from "./pet-image";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -62,13 +63,13 @@ function Top({ selectedPet }: { selectedPet: Pet }) {
 
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
-      <Image
-        src={selectedPet?.imageUrl}
-        alt="pet image"
-        height={75}
+      <PetImage
+        imageUrl={selectedPet?.imageUrl}
         width={75}
-        className="h-[75px] w-[75px] rounded-full object-cover"
+        height={75}
+        className="h-[75px] w-[75px]"
       />
+
       <h2 className="text-3xl font-semibold leading-7 ml-5">
         {selectedPet.name}
       </h2>

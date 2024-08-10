@@ -6,6 +6,7 @@ import { Pet } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
+import PetImage from "./pet-image";
 
 export default function PetList() {
   const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
@@ -27,13 +28,13 @@ export default function PetList() {
               }
             )}
           >
-            <Image
-              src={pet.imageUrl}
-              alt="pet image"
+            <PetImage
+              imageUrl={pet.imageUrl}
               width={45}
               height={45}
-              className="h-[45px] w-[45px] rounded-full object-cover"
+              className="h-[45px] w-[45px]"
             />
+
             <p className="font-semibold">{pet.name}</p>
           </button>
         </li>
