@@ -2,7 +2,7 @@
 
 import { getSupabaseSignedUrl, uploadSupabaseImage } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { CircleCheck, CircleX, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,13 +30,18 @@ const LoadingSpinner = ({ className }: { className: string }) => {
 export default function UploadImageBtn({
   onUpload,
   imageUrl,
+  setIsUploading,
+  isUploading,
 }: {
   onUpload: (url: string) => void;
   imageUrl?: string | null;
+  setIsUploading: (isUploading: boolean) => void;
+  isUploading: boolean;
 }) {
-  const [isUploading, setIsUploading] = useState(false);
   const [isError, setIsError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isReplacing, setIsReplacing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const uploadImage = async (file: File | null) => {
     setIsError(null);
@@ -68,19 +73,20 @@ export default function UploadImageBtn({
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0] || null;
+      setIsReplacing(true);
       const imageUrl = await uploadImage(file);
       if (!imageUrl) {
         setIsError("Unable to upload image");
         return;
       }
 
-      console.log(imageUrl);
       onUpload(imageUrl);
       setIsUploading(false);
       setIsSuccess(true);
     } catch (error) {
       setIsError("Unable to upload image");
       setIsUploading(false);
+      setIsReplacing(false);
     }
   };
 
@@ -91,14 +97,15 @@ export default function UploadImageBtn({
         onChange={handleImageChange}
         className="hidden"
         id="upload-input"
+        ref={fileInputRef}
       />
       <label htmlFor="upload-input">
         <Button
-          type="button"
           onClick={(e) => {
             e.preventDefault(); // Prevents form submission
-            document.getElementById("upload-input")?.click(); // Triggers file input
+            fileInputRef.current?.click(); // Triggers file input
           }}
+          type="button"
         >
           {imageUrl ? "Replace Image" : "Upload Image"}
         </Button>
@@ -112,7 +119,7 @@ export default function UploadImageBtn({
       )}
       {isUploading && <LoadingSpinner className="w-4 h-4" />}
       {isSuccess && <CircleCheck size={20} color="green" strokeWidth={2} />}
-      {imageUrl && (
+      {imageUrl && !isReplacing && (
         <div className="flex items-center gap-2">
           <Image
             src={imageUrl}

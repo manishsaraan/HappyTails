@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Pet, PetData } from "@/lib/types";
+import { Pet } from "@/lib/types";
 import { usePetContext } from "@/hooks/pet-context-hook";
 import {
   basePetSchema,
@@ -33,6 +33,7 @@ export default function PetForm({
 }) {
   const { handleAddPet, handleEditPet } = usePetContext();
   const [imageFile, setImageFile] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const {
     register,
@@ -101,10 +102,12 @@ export default function PetForm({
           )}
         </div>
         <div className="space-y-1 mb-4">
-          <Label htmlFor="image-url">Image URL</Label>
+          <Label htmlFor="image-url">Pet Image</Label>
           <UploadImageBtn
             imageUrl={actionType === "edit" ? selectedPet?.imageUrl : null}
             onUpload={handleImageUpload}
+            setIsUploading={setIsUploading}
+            isUploading={isUploading}
           />
         </div>
         <div className="space-y-1 mb-4">
@@ -122,7 +125,7 @@ export default function PetForm({
           )}
         </div>
         <DialogFooter>
-          <SubmitButton actionType={actionType} />
+          <SubmitButton actionType={actionType} isUploading={isUploading} />
         </DialogFooter>
       </form>
     </>
@@ -131,11 +134,13 @@ export default function PetForm({
 
 const SubmitButton = ({
   actionType,
+  isUploading,
 }: {
   actionType: "add" | "edit" | "delete";
+  isUploading: boolean;
 }) => {
   return (
-    <Button type="submit">
+    <Button type="submit" disabled={isUploading}>
       {actionType === "add" ? "Add a new pet" : "Edit a pet"}
     </Button>
   );
