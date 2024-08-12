@@ -1,27 +1,20 @@
 import ContentBlock from "@/components/content-block";
+import DeleteAccountBtn from "@/components/delete-account-btn";
 import H1 from "@/components/h1";
 import SignOutBtn from "@/components/sign-out-btn";
-import { Button } from "@/components/ui/button";
-import { auth, signOut } from "@/lib/auth";
+// Ensure this import is correct
 import { checkAuth } from "@/lib/server-utils";
-import { sleep } from "@/lib/utils";
-import { redirect } from "next/navigation";
-import { useTransition } from "react";
 
 export default async function Account() {
   const session = await checkAuth();
-
-  async function handleSignOut() {
-    "use server";
-    await signOut({ redirectTo: "/" });
-  }
 
   return (
     <main>
       <H1 className="py-8 text-white">Your Account</H1>
       <ContentBlock className="h-[500px] flex justify-center flex-col items-center space-y-2">
         <p>Logged in as {session?.user?.email}</p>
-        <SignOutBtn onClick={handleSignOut} />
+        <SignOutBtn />
+        <DeleteAccountBtn />
       </ContentBlock>
     </main>
   );

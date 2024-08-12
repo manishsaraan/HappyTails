@@ -2,7 +2,8 @@
 
 import { signIn } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { sleep } from "@/lib/utils";
+import { emails } from "@/constants/messages";
+import SignUpEmail from "../../../emails/signup";
 import { authSchema, petIdSchema, petSchemaWithImage } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
@@ -15,6 +16,7 @@ import {
 import { AuthError } from "next-auth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { redirect } from "next/navigation";
+import { resend } from "@/lib/resend";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY!);
 
@@ -31,7 +33,16 @@ export const addPetAction = async (
     if (!result.success) {
       return { error: "Invalid form data" };
     }
-
+    try {
+      await resend.emails.send({
+        from: emails.from,
+        subject: emails.welcome.subject,
+        to: "manish.newwork@gmail.com",
+        react: SignUpEmail({ action_link: "https://happytails.com" }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
     console.log(result.data, "result.data");
     await createPet({
       data: {
@@ -74,6 +85,7 @@ export const editPetAction = async (
     const pet = await getPetByPetId(parsedPetId.data, {
       userId: true,
       id: true,
+      imageUrl: true,
     });
 
     if (!pet) {
@@ -84,9 +96,14 @@ export const editPetAction = async (
       return { error: "Not authorized" };
     }
 
+    const updateData = { ...result.data };
+    if (!updateData.imageUrl) {
+      updateData.imageUrl = pet.imageUrl;
+    }
+
     await prisma.pet.update({
       where: { id: parsedPetId.data },
-      data: result.data,
+      data: updateData,
     });
 
     revalidatePath("/app", "layout");
@@ -196,7 +213,7 @@ export const registerAction = async (prevState: unknown, formData: unknown) => {
     email: result.data.email,
     hashedPassword: hashedPassword,
   };
-
+  console.log(user, "user");
   try {
     await prisma.user.create({
       data: user,
@@ -214,6 +231,21 @@ export const registerAction = async (prevState: unknown, formData: unknown) => {
   await logInAction(prevState, formData);
 };
 
+export const deleteAccount = async () => {
+  const session = await checkAuth();
+  if (!session) {
+    return { error: "Not authorized" };
+  }
+
+  const user = await getUserByEmail(session.user.email as string);
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  await prisma.user.delete({
+    where: { id: user.id },
+  });
+};
 export const createCheckoutSession = async () => {
   const session = await checkAuth();
   if (!session) {
@@ -227,16 +259,45 @@ export const createCheckoutSession = async () => {
 
   const stripeSession = await stripe.checkout.sessions.create({
     customer_email: user.email,
+    metadata: {
+      userId: user.id,
+    },
     line_items: [
       {
-        price: process.env.STRIPE_PRICE_ID,
+        price: process.env.STRIPE_PRICE_ID_RECURRENING,
         quantity: 1,
       },
     ],
-    mode: "payment",
+    mode: "subscription",
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment?cancelled=false`,
   });
   console.log(stripeSession, "stripeSession");
   redirect(stripeSession.url);
+};
+
+export const startTrial = async () => {
+  const session = await checkAuth();
+  if (!session) {
+    return { error: "Not authorized" };
+  }
+
+  const user = await getUserByEmail(session.user.email as string);
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  // crate subscirption with one week trial and save dummy stripe credentis
+
+  const subscription = await prisma.subscription.create({
+    data: {
+      userId: user.id,
+      stripeCustomerId: "dummy",
+      stripeSubscriptionId: "dummy",
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      paymentType: "trial",
+    },
+  });
+
+  redirect("/payment?success=true");
 };

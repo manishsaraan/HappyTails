@@ -1,5 +1,5 @@
 "use client";
-import { createCheckoutSession } from "@/app/actions/actions";
+import { createCheckoutSession, startTrial } from "@/app/actions/actions";
 import H1 from "@/components/h1";
 import { Button } from "@/components/ui/button";
 import React, { useTransition } from "react";
@@ -24,16 +24,23 @@ export default function Payment({
     <div className="flex flex-col items-center justify-center  space-y-10">
       <H1>One time payment is required to access HappyTails</H1>
       {!success ? (
-        <Button
-          disabled={isPending}
-          onClick={async () => {
-            startTransition(() => {
-              createCheckoutSession();
-            });
-          }}
-        >
-          Buy lifetime access for $99
-        </Button>
+        <div className="flex flex-col items-center justify-center space-y-2">
+          <p className="text-sm text-black-400 w-full text-center ">
+            You will be charged {"\u20B9"}2999 after 7 days of free trial.
+          </p>
+          <Button
+            disabled={isPending}
+            onClick={async () => {
+              startTransition(() => {
+                startTrial();
+              });
+            }}
+          >
+            Start free trial
+          </Button>
+          {/* <p className="text-sm text-gray-400 w-full text-center ">or</p>
+          <Button>Buy recurring access for $9.99</Button> */}
+        </div>
       ) : (
         <Button
           disabled={status === "loading"}
@@ -47,12 +54,12 @@ export default function Payment({
       )}
       {success && (
         <p className="text-green-500 text-sm mt-1 animate-pulse">
-          Payment successful. Now you have full access to HappyTails.
+          Free trail active. Now you have full access to HappyTails.
         </p>
       )}
       {cancelled && (
         <p className="text-red-500 text-sm mt-1">
-          Payment cancelled. Please try again.
+          Free trail cancelled. Please try again.
         </p>
       )}
     </div>
