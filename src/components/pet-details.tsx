@@ -41,14 +41,34 @@ function Notes({ selectedPet }: { selectedPet: Pet }) {
 
 function Info({ selectedPet }: { selectedPet: Pet }) {
   return (
-    <div className="flex justify-around py-10 px-5 text-center">
-      <div>
-        <h3 className="text-[13px] text-zinc-700 font-medium">Owner Name</h3>
-        <p className="mt-1 text-lg text-zinc-800">{selectedPet.ownerName}</p>
+    <div className="py-10 px-5 text-center">
+      <div className="flex justify-around mb-5">
+        <div className="w-1/2">
+          <h3 className="text-[13px] text-zinc-700 font-medium text-center">
+            Owner Name
+          </h3>
+          <p className="mt-1 text-lg text-zinc-800">{selectedPet.ownerName}</p>
+        </div>
+        <div className="w-1/2">
+          <h3 className="text-[13px] text-zinc-700 font-medium text-center">
+            Age
+          </h3>
+          <p className="mt-1 text-lg text-zinc-800">{selectedPet.age}</p>
+        </div>
       </div>
-      <div>
-        <h3 className="text-[13px] text-zinc-700 font-medium">Age</h3>
-        <p className="mt-1 text-lg text-zinc-800">{selectedPet.age}</p>
+      <div className="flex justify-around">
+        <div className="w-1/2">
+          <h3 className="text-[13px] text-zinc-700 font-medium text-center">
+            Owner Phone
+          </h3>
+          <p className="mt-1 text-lg text-zinc-800">{selectedPet.ownerPhone}</p>
+        </div>
+        <div className="w-1/2">
+          <h3 className="text-[13px] text-zinc-700 font-medium text-center">
+            Owner Email
+          </h3>
+          <p className="mt-1 text-lg text-zinc-800">{selectedPet.ownerEmail}</p>
+        </div>
       </div>
     </div>
   );

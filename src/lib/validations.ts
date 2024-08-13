@@ -11,6 +11,8 @@ export const basePetSchema = z.object({
     .trim()
     .min(2, "Owner must be at least 2 characters long")
     .max(20, "Owner must be at most 20 characters long"),
+  ownerEmail: z.string().email("Invalid email address"),
+
   age: z.coerce
     .number()
     .int()
@@ -28,6 +30,9 @@ export const petSchemaWithImage = basePetSchema.extend({
     z.literal(""),
     z.string().trim().url("Image URL must be a valid URL"),
   ]),
+  ownerPhone: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits long"), 
 });
 
 export const petSchemaWithoutImage = basePetSchema;

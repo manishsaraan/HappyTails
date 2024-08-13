@@ -1,7 +1,11 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { getUserByEmail } from "./server-utils";
+import {
+  getSubscriptionByUserId,
+  getUserByEmail,
+  updateUserHasAccess,
+} from "./server-utils";
 import { authSchema, TAuthFormData } from "./validations";
 
 const config = {
@@ -77,7 +81,7 @@ const config = {
 
           return Response.redirect(new URL("/payment", request.nextUrl));
         }
-        console.log("returning true");
+
         return true;
       }
 
@@ -93,17 +97,25 @@ const config = {
     },
     async jwt({ token, user, trigger }) {
       // for login user will be set for first time
+
       if (user) {
+        const subscription = await getSubscriptionByUserId(user.id);
+        console.log(subscription, "subscription");
         token.userId = user.id;
-        token.hasAccess = user.hasAccess;
+        token.hasAccess = subscription;
         token.email = user.email as string;
       }
 
       if (trigger === "update") {
-        // for every reqeust
+        // for every request
+        console.log("*****token*********", token);
+        const subscription = await getSubscriptionByUserId(
+          token.userId as string
+        );
+        console.log(subscription, "subscription");
         const user = await getUserByEmail(token.email);
         if (user) {
-          token.hasAccess = user.hasAccess;
+          token.hasAccess = subscription;
         }
       }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,13 +12,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pet } from "@/lib/types";
 import { usePetContext } from "@/hooks/pet-context-hook";
-import {
-  basePetSchema,
-  petSchemaWithoutImage,
-  TPetFormData,
-} from "@/lib/validations";
+import PhoneInput from "react-phone-input-2";
+import { petSchemaWithoutImage, TPetFormData } from "@/lib/validations";
 import UploadImageBtn from "./upload-image-btn";
-import { toast } from "sonner";
+import "react-phone-input-2/lib/style.css";
 
 export default function PetForm({
   heading,
@@ -34,6 +31,13 @@ export default function PetForm({
   const { handleAddPet, handleEditPet } = usePetContext();
   const [imageFile, setImageFile] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [rawPhone, setRawPhone] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedPet && selectedPet.ownerPhone) {
+      setRawPhone(selectedPet.ownerPhone);
+    }
+  }, [selectedPet]);
 
   const {
     register,
@@ -49,6 +53,7 @@ export default function PetForm({
             age: selectedPet?.age || 0,
             ownerName: selectedPet?.ownerName || "",
             notes: selectedPet?.notes || "",
+            ownerEmail: selectedPet?.ownerEmail || "",
           }
         : {},
   });
@@ -65,11 +70,18 @@ export default function PetForm({
     const imageUrl = imageFile || "";
 
     if (actionType === "add") {
-      console.log({ ...data, imageUrl }, "imageFile");
-      handleAddPet({ ...data, imageUrl });
+      console.log({ ...data, imageUrl, ownerPhone: rawPhone }, "imageFile");
+      handleAddPet({ ...data, imageUrl, ownerPhone: rawPhone });
     } else if (actionType === "edit") {
-      handleEditPet({ ...data, imageUrl }, selectedPet!.id);
+      handleEditPet(
+        { ...data, imageUrl, ownerPhone: rawPhone },
+        selectedPet!.id
+      );
     }
+  };
+
+  const handleOnChange = (value: string, data: any) => {
+    setRawPhone(value);
   };
 
   return (
@@ -89,17 +101,45 @@ export default function PetForm({
       >
         <div className="space-y-1 mb-4">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" {...register("name")} />
+          <Input
+            placeholder="Enter the name of the pet"
+            id="name"
+            {...register("name")}
+          />
           {errors.name && (
             <span className="text-red-500">{errors.name.message}</span>
           )}
         </div>
         <div className="space-y-1 mb-4">
-          <Label htmlFor="owner">Owner</Label>
-          <Input id="owner" {...register("ownerName")} />
+          <Label htmlFor="owner">Owner Name</Label>
+          <Input
+            placeholder="Enter the name of the owner"
+            id="owner"
+            {...register("ownerName")}
+          />
           {errors.ownerName && (
             <span className="text-red-500">{errors.ownerName.message}</span>
           )}
+        </div>
+        <div className="space-y-1 mb-4">
+          <Label htmlFor="ownerEmail">Owner Email</Label>
+          <Input
+            placeholder="Enter the email of the owner"
+            id="ownerEmail"
+            {...register("ownerEmail")}
+          />
+          {errors.ownerEmail && (
+            <span className="text-red-500">{errors.ownerEmail.message}</span>
+          )}
+        </div>
+        <div className="space-y-1 mb-4">
+          <Label htmlFor="ownerPhone">Owner Phone</Label>
+          <PhoneInput
+            value={rawPhone}
+            onChange={handleOnChange}
+            country="in"
+            containerClass="w-full"
+          />
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="image-url">Pet Image</Label>
@@ -112,14 +152,23 @@ export default function PetForm({
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="age">Age</Label>
-          <Input id="age" type="number" {...register("age")} />
+          <Input
+            placeholder="Enter the age of the pet"
+            id="age"
+            type="number"
+            {...register("age")}
+          />
           {errors.age && (
             <span className="text-red-500">{errors.age.message}</span>
           )}
         </div>
         <div className="space-y-1 mb-4">
           <Label htmlFor="notes">Notes</Label>
-          <Textarea id="notes" {...register("notes")} />
+          <Textarea
+            placeholder="Enter any additional information about the pet"
+            id="notes"
+            {...register("notes")}
+          />
           {errors.notes && (
             <span className="text-red-500">{errors.notes.message}</span>
           )}

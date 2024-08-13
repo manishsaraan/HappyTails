@@ -50,3 +50,35 @@ export async function getUserByEmail(email: string) {
   });
   return user;
 }
+
+export async function getSubscriptionByUserId(
+  userId: string
+): Promise<boolean> {
+  console.log(userId, "userId");
+  const subscription = await prisma.subscription.findFirst({
+    where: { userId: userId },
+  });
+  console.log(subscription, "subscription");
+  if (!subscription) {
+    return false;
+  }
+
+  console.log(
+    subscription.expiresAt,
+    new Date(),
+    subscription.expiresAt < new Date()
+  );
+  if (subscription.expiresAt < new Date()) {
+    return false;
+  }
+  return true;
+}
+
+export async function updateUserHasAccess(userId: string) {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { hasAccess: true },
+  });
+
+  return user;
+}
