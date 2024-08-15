@@ -292,8 +292,10 @@ export const startTrial = async () => {
   const subscription = await prisma.subscription.create({
     data: {
       userId: user.id,
-      stripeCustomerId: "dummy",
-      stripeSubscriptionId: "dummy",
+      stripeCustomerId: `dummy_${Math.random().toString(36).substring(2, 15)}`,
+      stripeSubscriptionId: `dummy_${Math.random()
+        .toString(36)
+        .substring(2, 15)}`,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       paymentType: "trial",
     },
