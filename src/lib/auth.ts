@@ -99,7 +99,7 @@ const config = {
       // for login user will be set for first time
 
       if (user) {
-        const subscription = await getSubscriptionByUserId(user.id);
+        const subscription = await getSubscriptionByUserId(user.id as string);
         console.log(subscription, "subscription");
         token.userId = user.id;
         token.hasAccess = subscription;
