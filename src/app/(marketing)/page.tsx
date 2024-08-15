@@ -23,7 +23,7 @@ export default function Home() {
             </h1>
             <p className="text-2xl font-medium max-w-[600px]">
               Use HappyTails to easily keep track of pets under your care. Get
-              lifetime of access for $99
+              lifetime of access for {"\u20B9"}2999
             </p>
             <div className="mt-10 space-x-3">
               <Button className="hover:bg-[#5DC9A8] hover:text-white" asChild>
