@@ -6,6 +6,8 @@ const pets = [
   {
     name: "Benjamin",
     ownerName: "John Doe",
+    ownerEmail: "john.doe@example.com",
+    ownerPhone: "123-456-7890",
     imageUrl: "/images/placeholder.png",
     age: 2,
     notes:
@@ -14,6 +16,8 @@ const pets = [
   {
     name: "Richard",
     ownerName: "Josephine Dane",
+    ownerEmail: "josephine.dane@example.com",
+    ownerPhone: "098-765-4321",
     imageUrl: "/images/placeholder.png",
     age: 5,
     notes: "Needs medication twice a day.",
@@ -21,6 +25,8 @@ const pets = [
   {
     name: "Anna",
     ownerName: "Frank Doe",
+    ownerEmail: "frank.doe@example.com",
+    ownerPhone: "456-789-0123",
     imageUrl: "/images/placeholder.png",
     age: 4,
     notes: "Allergic to chicken.",

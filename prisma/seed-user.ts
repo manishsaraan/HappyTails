@@ -11,6 +11,8 @@ const userData: Prisma.UserCreateInput = {
       {
         name: "Benjamin",
         ownerName: "John Doe",
+        ownerEmail: "john.doe@example.com",
+        ownerPhone: "123-456-7890",
         imageUrl:
           "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=100&w=1935&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         age: 2,
@@ -20,6 +22,8 @@ const userData: Prisma.UserCreateInput = {
       {
         name: "Richard",
         ownerName: "Josephine Dane",
+        ownerEmail: "josephine.dane@example.com",
+        ownerPhone: "098-765-4321",
         imageUrl:
           "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=100&w=1964&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         age: 5,
@@ -28,6 +32,8 @@ const userData: Prisma.UserCreateInput = {
       {
         name: "Anna",
         ownerName: "Frank Doe",
+        ownerEmail: "frank.doe@example.com",
+        ownerPhone: "456-789-0123",
         imageUrl:
           "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&q=100&w=1970&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         age: 4,
