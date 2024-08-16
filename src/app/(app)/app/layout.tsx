@@ -21,14 +21,12 @@ export default async function Layout({
     redirect("/login");
   }
 
-  const pets = await getPetsByUserId(session.user.id);
-
   return (
     <>
       <BackgroundPattern />
       <div className="max-w-[1050px] mx-auto flex flex-col min-h-screen">
         <AppHeader />
-        <PetContextProvider pets={pets}>
+        <PetContextProvider userId={session.user.id}>
           <SearchContextProvider>{children}</SearchContextProvider>
         </PetContextProvider>
 

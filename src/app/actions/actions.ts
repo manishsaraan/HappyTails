@@ -11,6 +11,7 @@ import {
   checkAuth,
   createPet,
   getPetByPetId,
+  getPetsByUserId,
   getUserByEmail,
 } from "@/lib/server-utils";
 import { AuthError } from "next-auth";
@@ -302,4 +303,9 @@ export const startTrial = async () => {
   });
 
   redirect("/payment?success=true");
+};
+
+export const getPets = async (userId: string) => {
+  const pets = await getPetsByUserId(userId);
+  return pets;
 };

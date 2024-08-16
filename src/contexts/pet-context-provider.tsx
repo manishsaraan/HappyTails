@@ -4,9 +4,15 @@ import {
   addPetAction,
   deletePetAction,
   editPetAction,
+  getPets,
 } from "@/app/actions/actions";
 import { Pet, PetData, PetId } from "@/lib/types";
-import React, { useState, createContext, useOptimistic } from "react";
+import React, {
+  useState,
+  createContext,
+  useOptimistic,
+  useEffect,
+} from "react";
 import { toast } from "sonner";
 
 type PetContextType = {
@@ -14,6 +20,7 @@ type PetContextType = {
   selectedPetId: PetId | null;
   selectedPet: Pet | undefined;
   noOfPets: number;
+  loading: boolean;
   handleChangeSelectedPetId: (id: PetId) => void;
   handleCheckoutPet: (id: PetId) => Promise<void>;
   handleAddPet: (formData: PetData) => Promise<void>;
@@ -24,14 +31,16 @@ export const PetContext = createContext<PetContextType | null>(null);
 
 export default function PetContextProvider({
   children,
-  pets: data,
+  userId,
 }: {
   children: React.ReactNode;
-  pets: Pet[];
+  userId: string;
 }) {
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [loading, setLoading] = useState(false);
   // initial state
   const [optimisticPets, setOptimisticPets] = useOptimistic(
-    data,
+    pets,
     (state, { action, payload }) => {
       switch (action) {
         case "add":
@@ -55,12 +64,22 @@ export default function PetContextProvider({
   );
   const [selectedPetId, setSelectedPetId] = useState<PetId | null>(null);
 
+  useEffect(() => {
+    getUserPets(userId);
+  }, [userId]);
   // derived State
   const selectedPet = optimisticPets.find((pet) => pet.id === selectedPetId);
   const noOfPets = optimisticPets.length;
   // handlers
   const handleChangeSelectedPetId = (id: PetId) => {
     setSelectedPetId(id);
+  };
+
+  const getUserPets = async (userId: string) => {
+    setLoading(true);
+    const pets = await getPets(userId);
+    setPets(pets);
+    setLoading(false);
   };
 
   const handleCheckoutPet = async (petId: PetId) => {
@@ -83,7 +102,6 @@ export default function PetContextProvider({
   const handleAddPet = async (petData: PetData) => {
     setOptimisticPets({ action: "add", payload: petData });
 
-    console.log(petData, "insdie context");
     const result = await addPetAction(petData);
     if (result && result.error) {
       toast.warning(result.error);
@@ -115,6 +133,7 @@ export default function PetContextProvider({
         selectedPetId,
         selectedPet,
         noOfPets,
+        loading,
         handleChangeSelectedPetId,
         handleCheckoutPet,
         handleAddPet,
