@@ -33,6 +33,13 @@ export default function AppFooter({ className }: { className?: string }) {
             {link.label}
           </Link>
         ))}
+        <Link
+          className="opacity-70"
+          target="_blank"
+          href={"mailto:support@happytails.com?subject=Support%20Request"}
+        >
+          contact us
+        </Link>
       </section>
     </footer>
   );
