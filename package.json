@@ -38,6 +38,7 @@
     "react-dom": "^18",
     "react-email": "^2.1.6",
     "react-hook-form": "^7.47.0",
+    "react-joyride": "^2.8.2",
     "react-phone-input-2": "^2.15.1",
     "resend": "^3.5.0",
     "server-only": "^0.0.1",

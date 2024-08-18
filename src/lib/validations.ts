@@ -32,7 +32,7 @@ export const petSchemaWithImage = basePetSchema.extend({
   ]),
   ownerPhone: z
     .string()
-    .min(10, "Phone number must be at least 10 digits long"), 
+    .min(10, "Phone number must be at least 10 digits long"),
 });
 
 export const petSchemaWithoutImage = basePetSchema;
@@ -61,3 +61,15 @@ export const authSchema = z.object({
     .min(3, "Password must be at least 8 characters long"),
 });
 export type TAuthFormData = z.infer<typeof authSchema>;
+
+export const notesSchema = z.object({
+  notes: z.union([
+    z.literal(""),
+    z
+      .string()
+      .min(100, "Notes must be at least 1000 characters")
+      .max(500, "Notes must be at most 500 characters"),
+  ]),
+});
+
+export type NotesSchemaT = z.infer<typeof notesSchema>;

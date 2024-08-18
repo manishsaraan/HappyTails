@@ -38,7 +38,7 @@ export const addPetAction = async (
       await resend.emails.send({
         from: emails.from,
         subject: emails.welcome.subject,
-        to: "manish.newwork@gmail.com",
+        to: "manish.knovatek@gmail.com",
         react: SignUpEmail({ action_link: "https://happytails.com" }),
       });
     } catch (error) {
@@ -116,7 +116,8 @@ export const editPetAction = async (
 };
 
 export const deletePetAction = async (
-  petId: unknown
+  petId: unknown,
+  notes: string
 ): Promise<{
   success?: string;
   error?: string;
@@ -142,7 +143,7 @@ export const deletePetAction = async (
       return { error: "Not authorized" };
     }
 
-    console.log(pet);
+    console.log(notes, "notes");
     await prisma.pet.delete({
       where: { id: pet.id },
     });

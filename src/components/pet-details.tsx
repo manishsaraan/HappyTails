@@ -2,9 +2,11 @@
 
 import { usePetContext } from "@/hooks/pet-context-hook";
 import { Pet } from "@/lib/types";
-import Image from "next/image";
+
 import PetButton from "./pet-button";
 import PetImage from "./pet-image";
+import { useState } from "react";
+import { CheckoutDialog } from "./checkout-dialog";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -75,11 +77,7 @@ function Info({ selectedPet }: { selectedPet: Pet }) {
 }
 
 function Top({ selectedPet }: { selectedPet: Pet }) {
-  const { handleCheckoutPet } = usePetContext();
-
-  const deletePet = async () => {
-    await handleCheckoutPet(selectedPet.id);
-  };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
@@ -97,10 +95,19 @@ function Top({ selectedPet }: { selectedPet: Pet }) {
         <PetButton actionType="edit" onHandleClick={() => {}}>
           Edit
         </PetButton>
-        <PetButton actionType="delete" onHandleClick={deletePet}>
+        <PetButton
+          actionType="delete"
+          onHandleClick={() => setIsDialogOpen(true)}
+        >
           Checkout
         </PetButton>
       </div>
+
+      <CheckoutDialog
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        selectedPet={selectedPet}
+      />
     </div>
   );
 }

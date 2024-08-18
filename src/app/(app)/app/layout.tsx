@@ -9,24 +9,22 @@ import prisma from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getPetsByUserId } from "@/lib/server-utils";
+import React from "react";
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
   if (!session?.user) {
     redirect("/login");
   }
 
+  const pets = await getPetsByUserId(session.user.id);
   return (
     <>
       <BackgroundPattern />
       <div className="max-w-[1050px] mx-auto flex flex-col min-h-screen">
         <AppHeader />
-        <PetContextProvider userId={session.user.id}>
+        <PetContextProvider pets={pets}>
           <SearchContextProvider>{children}</SearchContextProvider>
         </PetContextProvider>
 
@@ -36,3 +34,5 @@ export default async function Layout({
     </>
   );
 }
+
+export default React.memo(Layout);

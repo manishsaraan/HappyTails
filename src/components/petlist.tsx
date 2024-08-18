@@ -6,7 +6,6 @@ import { Pet } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import React from "react";
 import PetImage from "./pet-image";
-import { PetListSkeleton } from "./pet-list-skeleton";
 import { Separator } from "./ui/separator";
 
 function PetListItem({
@@ -43,16 +42,11 @@ function PetListItem({
 }
 
 export default function PetList() {
-  const { pets, loading, selectedPetId, handleChangeSelectedPetId } =
-    usePetContext();
+  const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
   const { search } = useSearchContext();
   const filteredPets = pets.filter((pet) =>
     pet.name.toLowerCase().includes(search.toLowerCase())
   );
-
-  if (loading) {
-    return <PetListSkeleton count={4} />;
-  }
 
   return (
     <ul className="bg-white border-b border-black/[0.08]">

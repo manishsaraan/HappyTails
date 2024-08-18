@@ -1,5 +1,5 @@
 export const emails = {
-  email: "hi@manishsaraan.com",
+  email: "hi@email.artzen.io",
 
   account: {
     deleted: "Your HappyTails account is Deleted!",
@@ -8,7 +8,7 @@ export const emails = {
     subject: "✨ Welcome to HappyTails",
   },
   sent: "We just sent an email with magic link, check your inbox.",
-  from: "Manish from HappyTails <hi@manishsaraan.com>",
+  from: "Manish from HappyTails <hi@email.artzen.io>",
   signin: { subject: "Sign in link for HappyTails" },
   signup: { subject: "Sign up link for HappyTails" },
 };
