@@ -19,17 +19,17 @@ import Footer from "./footer";
 import Footnote from "./footnote";
 
 export const SignUpEmail = ({
-  otp = "",
+  action_link = "",
   baseUrl,
 }: {
-  otp: string;
+  action_link?: string;
   baseUrl: string;
 }) => {
   return (
     <Html>
       <Tailwind>
         <Head />
-        <Preview>Verify Your Email - HappyTails</Preview>
+        <Preview>Reset Your Password - HappyTails</Preview>
         <Body className="bg-white my-auto mx-auto font-sans">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[22px]">
@@ -46,17 +46,25 @@ export const SignUpEmail = ({
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">Hi,</Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              Thanks for signing up at HappyTails. Please use the below OTP to
-              verify your email.
+              Please reset your password by clicking the button below.
             </Text>
-            <Text
-              className="text-black text-[20px] mt-[16px] mb-[10px] leading-[24px]"
-              style={{ letterSpacing: "3px" }}
+            <Link
+              className="bg-[#000000] p-2 px-2.5 mt-1 w-[100px] block rounded-md text-white text-[13px] font-normal no-underline text-center"
+              href={action_link}
             >
-              {otp}
+              Reset Password
+            </Link>
+            <Text className="text-black text-[14px] mt-[16px] mb-[10px] leading-[24px]">
+              or if you are on mobile, copy and paste this URL into your
+              browser:{" "}
+              <Row>
+                <Link className="text-[#cc35e5] break-all text-sm flex w-[465px] leading-[24px]">
+                  {action_link.replace(/^https?:\/\//, "")}
+                </Link>
+              </Row>
             </Text>
 
-            <Footnote />
+            <Footnote hideNote={true} />
             <Footer />
           </Container>
         </Body>

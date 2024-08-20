@@ -18,18 +18,22 @@ import {
 import Footer from "./footer";
 import Footnote from "./footnote";
 
-export const SignUpEmail = ({
-  otp = "",
+export const ThanksEmail = ({
+  reviewLink = "",
+  petName = "",
+  content = "",
   baseUrl,
 }: {
-  otp: string;
+  reviewLink: string;
+  petName: string;
+  content: string;
   baseUrl: string;
 }) => {
   return (
     <Html>
       <Tailwind>
         <Head />
-        <Preview>Verify Your Email - HappyTails</Preview>
+        <Preview>Thanks for using HappyTails</Preview>
         <Body className="bg-white my-auto mx-auto font-sans">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[22px]">
@@ -46,17 +50,19 @@ export const SignUpEmail = ({
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">Hi,</Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              Thanks for signing up at HappyTails. Please use the below OTP to
-              verify your email.
+              Thanks for leting HappyTails take care of {petName}.
             </Text>
-            <Text
-              className="text-black text-[20px] mt-[16px] mb-[10px] leading-[24px]"
-              style={{ letterSpacing: "3px" }}
+            <Text className="text-black text-[14px] leading-[24px]">
+              {content}
+            </Text>
+            <Link
+              className="bg-[#000000] p-2 px-2.5 mt-1 w-[100px] block rounded-md text-white text-[13px] font-normal no-underline text-center"
+              href={reviewLink}
             >
-              {otp}
-            </Text>
+              Leave a Review
+            </Link>
 
-            <Footnote />
+            <Footnote hideNote={true} />
             <Footer />
           </Container>
         </Body>
@@ -65,4 +71,4 @@ export const SignUpEmail = ({
   );
 };
 
-export default SignUpEmail;
+export default ThanksEmail;
