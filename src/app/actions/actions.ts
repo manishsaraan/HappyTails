@@ -4,7 +4,12 @@ import { signIn } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { emails } from "@/constants/messages";
 import SignUpEmail from "../../../emails/signup";
-import { authSchema, petIdSchema, petSchemaWithImage } from "@/lib/validations";
+import {
+  authSchema,
+  petIdSchema,
+  petSchemaWithImage,
+  suggestionsSchema,
+} from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import {
@@ -18,6 +23,8 @@ import { AuthError } from "next-auth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { redirect } from "next/navigation";
 import { resend } from "@/lib/resend";
+import ThanksEmail from "../../../emails/thanks";
+import { createEmailContent } from "@/lib/openai";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY!);
 
@@ -39,12 +46,16 @@ export const addPetAction = async (
         from: emails.from,
         subject: emails.welcome.subject,
         to: "manish.knovatek@gmail.com",
-        react: SignUpEmail({ action_link: "https://happytails.com" }),
+        react: SignUpEmail({
+          baseUrl: "https://happytails.com",
+          otp: "123456",
+        }),
       });
     } catch (error) {
       console.error(error);
     }
     console.log(result.data, "result.data");
+
     await createPet({
       data: {
         ...result.data,
@@ -117,7 +128,7 @@ export const editPetAction = async (
 
 export const deletePetAction = async (
   petId: unknown,
-  notes: string
+  suggestions: string
 ): Promise<{
   success?: string;
   error?: string;
@@ -128,6 +139,11 @@ export const deletePetAction = async (
     const parsedPetId = petIdSchema.safeParse(petId);
     if (!parsedPetId.success) {
       return { error: "Invalid pet ID" };
+    }
+
+    const parsedSuggestions = suggestionsSchema.safeParse({ suggestions });
+    if (!parsedSuggestions.success) {
+      return { error: "Invalid suggestions" };
     }
 
     const pet = await getPetByPetId(parsedPetId.data, {
@@ -143,7 +159,27 @@ export const deletePetAction = async (
       return { error: "Not authorized" };
     }
 
-    console.log(notes, "notes");
+    // send email to user
+    const content = await createEmailContent(
+      pet.notes,
+      suggestions,
+      pet.name,
+      pet.ownerName
+    );
+
+    await resend.emails.send({
+      from: emails.from,
+      subject: content.subject,
+      to: session.user.email as string,
+      react: ThanksEmail({
+        baseUrl: process.env.NEXT_PUBLIC_APP_URL!,
+        reviewLink: `${process.env.NEXT_PUBLIC_APP_URL}/review`,
+        petName: pet.name,
+
+        content: content.content,
+      }),
+    });
+
     await prisma.pet.delete({
       where: { id: pet.id },
     });

@@ -19,9 +19,9 @@ import Footer from "./footer";
 import Footnote from "./footnote";
 
 export const ThanksEmail = ({
-  reviewLink = "",
-  petName = "",
-  content = "",
+  reviewLink,
+  petName,
+  content,
   baseUrl,
 }: {
   reviewLink: string;
@@ -52,9 +52,10 @@ export const ThanksEmail = ({
             <Text className="text-black text-[14px] leading-[24px]">
               Thanks for leting HappyTails take care of {petName}.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              {content}
-            </Text>
+            <Text
+              className="text-black text-[14px] leading-[24px]"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
             <Link
               className="bg-[#000000] p-2 px-2.5 mt-1 w-[100px] block rounded-md text-white text-[13px] font-normal no-underline text-center"
               href={reviewLink}

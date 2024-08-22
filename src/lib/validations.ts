@@ -62,14 +62,14 @@ export const authSchema = z.object({
 });
 export type TAuthFormData = z.infer<typeof authSchema>;
 
-export const notesSchema = z.object({
-  notes: z.union([
+export const suggestionsSchema = z.object({
+  suggestions: z.union([
     z.literal(""),
     z
       .string()
-      .min(100, "Notes must be at least 1000 characters")
-      .max(500, "Notes must be at most 500 characters"),
+      .min(100, "Suggestions must be at least 100 characters")
+      .max(200, "Suggestions must be at most 200 characters"),
   ]),
 });
 
-export type NotesSchemaT = z.infer<typeof notesSchema>;
+export type SuggestionsSchemaT = z.infer<typeof suggestionsSchema>;

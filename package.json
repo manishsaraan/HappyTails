@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate",
+    "worker": "ts-node ./src/lib/worker.js",
+    "email-dev": "email dev"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed-user.ts"
@@ -26,14 +28,17 @@
     "@supabase/supabase-js": "^2.45.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "bullmq": "^5.12.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "formidable": "^2.1.2",
+    "ioredis": "^5.4.1",
     "lucide-react": "^0.427.0",
     "next": "14.1.0",
     "next-auth": "^5.0.0-beta.4",
     "next-seo": "^6.5.0",
     "next-themes": "^0.3.0",
+    "openai": "^4.56.0",
     "react": "^18",
     "react-dom": "^18",
     "react-email": "^2.1.6",
@@ -46,7 +51,6 @@
     "stripe": "^14.12.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "ts-node": "^10.9.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -61,6 +65,7 @@
     "postcss": "^8",
     "prisma": "^5.17.0",
     "tailwindcss": "^3.3.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }
 }

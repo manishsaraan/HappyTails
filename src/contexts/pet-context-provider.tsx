@@ -15,7 +15,7 @@ type PetContextType = {
   selectedPet: Pet | undefined;
   noOfPets: number;
   handleChangeSelectedPetId: (id: PetId) => void;
-  handleCheckoutPet: (id: PetId, notes: string) => Promise<void>;
+  handleCheckoutPet: (id: PetId, suggestions: string) => Promise<void>;
   handleAddPet: (formData: PetData) => Promise<void>;
   handleEditPet: (formData: PetData, selectedPetId: PetId) => Promise<void>;
 };
@@ -63,13 +63,13 @@ export default function PetContextProvider({
     setSelectedPetId(id);
   };
 
-  const handleCheckoutPet = async (petId: PetId, notes: string) => {
+  const handleCheckoutPet = async (petId: PetId, suggestions: string) => {
     // setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
     setOptimisticPets({
       action: "delete",
       payload: petId,
     });
-    const result = await deletePetAction(petId, notes);
+    const result = await deletePetAction(petId, suggestions);
     if (result.success) {
       toast.success(result.success);
     }

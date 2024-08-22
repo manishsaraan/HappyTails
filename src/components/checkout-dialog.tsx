@@ -12,7 +12,7 @@ import { usePetContext } from "@/hooks/pet-context-hook";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pet } from "@prisma/client";
-import { notesSchema, NotesSchemaT } from "@/lib/validations";
+import { suggestionsSchema, SuggestionsSchemaT } from "@/lib/validations";
 
 export function CheckoutDialog({
   isDialogOpen,
@@ -29,12 +29,12 @@ export function CheckoutDialog({
     trigger,
     getValues,
     formState: { errors },
-  } = useForm<NotesSchemaT>({
-    resolver: zodResolver(notesSchema),
+  } = useForm<SuggestionsSchemaT>({
+    resolver: zodResolver(suggestionsSchema),
   });
 
-  const deletePet = async (data: NotesSchemaT) => {
-    await handleCheckoutPet(selectedPet.id, data.notes || "");
+  const deletePet = async (data: SuggestionsSchemaT) => {
+    await handleCheckoutPet(selectedPet.id, data.suggestions || "");
     setIsDialogOpen(false);
   };
 
@@ -49,18 +49,18 @@ export function CheckoutDialog({
             e.preventDefault();
             const isValid = await trigger();
             if (isValid) {
-              const formDataObj: NotesSchemaT = getValues();
+              const formDataObj: SuggestionsSchemaT = getValues();
               await deletePet(formDataObj);
             }
           }}
         >
           <Textarea
-            placeholder="Enter any notes here..."
+            placeholder="Enter any suggestions here..."
             className="min-h-[200px]"
-            {...register("notes")}
+            {...register("suggestions")}
           />
-          {errors.notes && (
-            <p className="text-red-500">{errors.notes.message}</p>
+          {errors.suggestions && (
+            <p className="text-red-500">{errors.suggestions.message}</p>
           )}
           <DialogFooter className="mt-3">
             <Button type="submit">Submit</Button>
