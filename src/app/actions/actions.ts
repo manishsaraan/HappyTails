@@ -346,3 +346,59 @@ export const getPets = async (userId: string) => {
   const pets = await getPetsByUserId(userId);
   return pets;
 };
+
+function generateOtp(length: number): number {
+  const digits = "0123456789";
+  let otp = "";
+  for (let i = 0; i < length; i++) {
+    otp += digits[Math.floor(Math.random() * 10)];
+  }
+  return Number(otp);
+}
+
+import { z } from "zod";
+import ResetPasswordEmail from "../../../emails/reset-password";
+
+const emailSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export const sendResetPasswordEmail = async (email: string) => {
+  const validation = emailSchema.safeParse({ email });
+  if (!validation.success) {
+    return { error: validation.error.errors[0].message };
+  }
+
+  const user = await getUserByEmail(email);
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  const otp = generateOtp(6);
+
+  console.log("otp", otp);
+  await prisma.passwordReset.create({
+    data: {
+      userId: user.id,
+      otp: otp,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // expire in 15 minutes
+    },
+  });
+
+  try {
+    resend.emails.send({
+      from: emails.from,
+      subject: "Reset Your Password - HappyTails",
+      to: email,
+      react: ResetPasswordEmail({
+        baseUrl: process.env.NEXT_PUBLIC_APP_URL!,
+        otp: otp,
+      }),
+    });
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to send email" };
+  }
+
+  return { success: true };
+};

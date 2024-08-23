@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { logInAction, registerAction } from "@/app/actions/actions";
 import { AuthFormBtn } from "./auth-form-btn";
 import { useFormState } from "react-dom";
+import Link from "next/link";
 
 const AuthForm = ({ type }: { type: "login" | "register" }) => {
   const [signupError, dispatchSignup] = useFormState(registerAction, undefined);
@@ -28,6 +29,13 @@ const AuthForm = ({ type }: { type: "login" | "register" }) => {
       )}
       {type === "login" && loginError && (
         <p className="text-red-500">{loginError.error}</p>
+      )}
+      {type === "login" && (
+        <div className="space-y-1">
+          <Link href="/forgot-password" className="text-blue-500">
+            Forgot Password?
+          </Link>
+        </div>
       )}
       <div className="space-y-1">
         <AuthFormBtn type={type} />

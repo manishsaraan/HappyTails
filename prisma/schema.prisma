@@ -31,14 +31,15 @@ model Pet {
 }
 
 model User {
-  id             String         @id @default(cuid())
-  email          String         @unique
+  id             String          @id @default(cuid())
+  email          String          @unique
   hashedPassword String
-  hasAccess      Boolean        @default(false)
+  hasAccess      Boolean         @default(false)
   pets           Pet[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   Subscription   Subscription[]
+  PasswordReset  PasswordReset[]
 
   @@index([email])
 }
@@ -56,4 +57,16 @@ model Subscription {
 
   @@index([userId])
   @@index([stripeSubscriptionId])
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  otp       Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

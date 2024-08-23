@@ -18,11 +18,11 @@ import {
 import Footer from "./footer";
 import Footnote from "./footnote";
 
-export const SignUpEmail = ({
-  action_link = "",
+export const ResetPasswordEmail = ({
+  otp,
   baseUrl,
 }: {
-  action_link?: string;
+  otp: number;
   baseUrl: string;
 }) => {
   return (
@@ -46,24 +46,14 @@ export const SignUpEmail = ({
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">Hi,</Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              Please reset your password by clicking the button below.
+              Please reset your password by entering the below OTP.
             </Text>
-            <Link
-              className="bg-[#000000] p-2 px-2.5 mt-1 w-[100px] block rounded-md text-white text-[13px] font-normal no-underline text-center"
-              href={action_link}
+            <Text
+              className="text-black text-[20px] mt-[16px] mb-[10px] leading-[24px]"
+              style={{ letterSpacing: "3px" }}
             >
-              Reset Password
-            </Link>
-            <Text className="text-black text-[14px] mt-[16px] mb-[10px] leading-[24px]">
-              or if you are on mobile, copy and paste this URL into your
-              browser:{" "}
-              <Row>
-                <Link className="text-[#cc35e5] break-all text-sm flex w-[465px] leading-[24px]">
-                  {action_link.replace(/^https?:\/\//, "")}
-                </Link>
-              </Row>
+              {otp}
             </Text>
-
             <Footnote hideNote={true} />
             <Footer />
           </Container>
@@ -73,4 +63,4 @@ export const SignUpEmail = ({
   );
 };
 
-export default SignUpEmail;
+export default ResetPasswordEmail;

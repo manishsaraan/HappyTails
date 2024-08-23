@@ -18,3 +18,5 @@ export const emails = {
   signin: { subject: "Sign in link for HappyTails" },
   signup: { subject: "Sign up link for HappyTails" },
 };
+
+export const maxChars = 200;

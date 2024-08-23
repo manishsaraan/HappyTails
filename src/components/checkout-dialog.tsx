@@ -13,6 +13,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pet } from "@prisma/client";
 import { suggestionsSchema, SuggestionsSchemaT } from "@/lib/validations";
+import { useState } from "react";
+import { maxChars } from "@/constants/messages";
 
 export function CheckoutDialog({
   isDialogOpen,
@@ -24,6 +26,8 @@ export function CheckoutDialog({
   selectedPet: Pet;
 }) {
   const { handleCheckoutPet } = usePetContext();
+  const [charCount, setCharCount] = useState(0);
+
   const {
     register,
     trigger,
@@ -54,11 +58,18 @@ export function CheckoutDialog({
             }
           }}
         >
-          <Textarea
-            placeholder="Enter any suggestions here..."
-            className="min-h-[200px]"
-            {...register("suggestions")}
-          />
+          <div className="relative">
+            <Textarea
+              placeholder="Enter any suggestions here..."
+              className="min-h-[200px]"
+              {...register("suggestions")}
+              onChange={(e) => setCharCount(e.target.value.length)}
+              maxLength={maxChars}
+            />
+            <div className="absolute bottom-2 right-2 text-sm text-gray-500">
+              {charCount}/{maxChars}
+            </div>
+          </div>
           {errors.suggestions && (
             <p className="text-red-500">{errors.suggestions.message}</p>
           )}
