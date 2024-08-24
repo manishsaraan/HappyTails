@@ -50,15 +50,16 @@ export type TPetFormData = z.infer<typeof basePetSchema>;
 export type TPetFormDataWithImage = z.infer<typeof petSchemaWithImage>;
 export const petIdSchema = z.string().cuid();
 
+const passwordField = z
+  .string()
+  .max(100, "Password must be at most 100 characters long")
+  .min(3, "Password must be at least 8 characters long");
 export const authSchema = z.object({
   email: z
     .string()
     .max(100, "Email must be at most 100 characters long")
     .email("Invalid email address"),
-  password: z
-    .string()
-    .max(100, "Password must be at most 100 characters long")
-    .min(3, "Password must be at least 8 characters long"),
+  password: passwordField,
 });
 export type TAuthFormData = z.infer<typeof authSchema>;
 
@@ -82,12 +83,27 @@ const otpField = z
   .string()
   .length(6, "OTP must be 6 digits")
   .regex(/^\d+$/, "OTP must contain only digits");
-
+const hashField = z.string().uuid("Invalid UUID format");
 export const otpSchema = z.object({
   otp: otpField,
 });
 
 export const verifyOTPSchema = z.object({
   otp: otpField,
-  hash: z.string().uuid("Invalid UUID format"),
+  hash: hashField,
 });
+
+export const updatePasswordSchema = z.object({
+  password: passwordField,
+  hash: hashField,
+});
+
+export const updatePasswordFormSchema = z
+  .object({
+    password: passwordField,
+    retypePassword: passwordField,
+  })
+  .refine((data) => data.password === data.retypePassword, {
+    message: "Passwords do not match",
+    path: ["retypePassword"],
+  });

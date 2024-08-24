@@ -10,6 +10,7 @@ import {
   petIdSchema,
   petSchemaWithImage,
   suggestionsSchema,
+  updatePasswordSchema,
   verifyOTPSchema,
 } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
@@ -437,4 +438,49 @@ export const verifyOtpAndHash = async (otp: unknown, hash: unknown) => {
   }
 
   redirect(`/reset-password?hash=${hash}`);
+};
+
+export const updatePassword = async (password: unknown, hash: unknown) => {
+  const result = updatePasswordSchema.safeParse({
+    password: password,
+    hash: hash,
+  });
+
+  if (!result.success) {
+    return { error: "Invalid input format" };
+  }
+
+  console.log();
+  const passwordReset = await prisma.passwordReset.findFirst({
+    where: {
+      hash: result.data.hash,
+    },
+  });
+
+  if (!passwordReset) {
+    return { error: "Unable to reset password" };
+  }
+
+  if (passwordReset.expiresAt <= new Date()) {
+    return { error: "Reset password link has expired" };
+  }
+
+  const hashedPassword = await bcrypt.hash(result.data.password, 10);
+
+  await prisma.user.update({
+    where: {
+      id: passwordReset.userId,
+    },
+    data: {
+      hashedPassword: hashedPassword,
+    },
+  });
+
+  await prisma.passwordReset.deleteMany({
+    where: {
+      userId: passwordReset.userId,
+    },
+  });
+
+  return { success: true };
 };
