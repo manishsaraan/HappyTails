@@ -73,3 +73,21 @@ export const suggestionsSchema = z.object({
 });
 
 export type SuggestionsSchemaT = z.infer<typeof suggestionsSchema>;
+
+export const emailSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+const otpField = z
+  .string()
+  .length(6, "OTP must be 6 digits")
+  .regex(/^\d+$/, "OTP must contain only digits");
+
+export const otpSchema = z.object({
+  otp: otpField,
+});
+
+export const verifyOTPSchema = z.object({
+  otp: otpField,
+  hash: z.string().uuid("Invalid UUID format"),
+});

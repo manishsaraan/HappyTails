@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/form";
 import { sendResetPasswordEmail } from "@/app/actions/actions";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -23,6 +25,7 @@ const formSchema = z.object({
 
 export default function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,12 +37,12 @@ export default function ResetPassword() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      // TODO: Implement the actual email sending logic here
-      console.log(values, "*********values**************");
       const res = await sendResetPasswordEmail(values.email);
-      console.log(res, "*********res**************");
+      console.log(res);
+      toast.success("Reset link sent. Please check your email.");
+      router.push("/verify-email/" + res.hash);
     } catch (error) {
-      console.error("Error:", error);
+      toast.error("Error sending reset link");
     } finally {
       setIsLoading(false);
     }

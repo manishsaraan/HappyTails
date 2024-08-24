@@ -6,9 +6,11 @@ import { emails } from "@/constants/messages";
 import SignUpEmail from "../../../emails/signup";
 import {
   authSchema,
+  emailSchema,
   petIdSchema,
   petSchemaWithImage,
   suggestionsSchema,
+  verifyOTPSchema,
 } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
@@ -20,11 +22,13 @@ import {
   getUserByEmail,
 } from "@/lib/server-utils";
 import { AuthError } from "next-auth";
+import { v4 as uuidv4 } from "uuid";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { redirect } from "next/navigation";
 import { resend } from "@/lib/resend";
 import ThanksEmail from "../../../emails/thanks";
 import { createEmailContent } from "@/lib/openai";
+import ResetPasswordEmail from "../../../emails/reset-password";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY!);
 
@@ -356,31 +360,32 @@ function generateOtp(length: number): number {
   return Number(otp);
 }
 
-import { z } from "zod";
-import ResetPasswordEmail from "../../../emails/reset-password";
-
-const emailSchema = z.object({
-  email: z.string().email("Invalid email address"),
-});
-
-export const sendResetPasswordEmail = async (email: string) => {
+export const sendResetPasswordEmail = async (
+  email: string
+): Promise<{ hash: string; error?: string }> => {
   const validation = emailSchema.safeParse({ email });
+  const hash = uuidv4();
+
   if (!validation.success) {
-    return { error: validation.error.errors[0].message };
+    console.error(validation.error.errors[0].message);
+    return { hash };
   }
 
   const user = await getUserByEmail(email);
   if (!user) {
-    return { error: "User not found" };
+    console.error("User not found");
+    return { hash };
   }
 
   const otp = generateOtp(6);
 
   console.log("otp", otp);
+
   await prisma.passwordReset.create({
     data: {
       userId: user.id,
       otp: otp,
+      hash: hash,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000), // expire in 15 minutes
     },
   });
@@ -397,8 +402,39 @@ export const sendResetPasswordEmail = async (email: string) => {
     });
   } catch (error) {
     console.error(error);
-    return { error: "Failed to send email" };
+    return { hash };
   }
 
-  return { success: true };
+  // Don't return if user is registered or not.
+  // Just send users to verify email page. If they are actually registered then they will get email otherwise not.
+  return { hash };
+};
+
+export const verifyOtpAndHash = async (otp: unknown, hash: unknown) => {
+  const result = verifyOTPSchema.safeParse({
+    otp: otp,
+    hash: hash,
+  });
+
+  if (!result.success) {
+    return { error: "Invalid OTP format" };
+  }
+
+  console.log(result.data);
+  const passwordReset = await prisma.passwordReset.findFirst({
+    where: {
+      otp: +result.data.otp,
+      hash: result.data.hash,
+    },
+  });
+
+  if (!passwordReset) {
+    return { error: "Invalid OTP" };
+  }
+
+  if (passwordReset.expiresAt <= new Date()) {
+    return { error: "OTP has expired" };
+  }
+
+  redirect(`/reset-password?hash=${hash}`);
 };
