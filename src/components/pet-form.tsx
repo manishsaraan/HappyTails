@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Pet } from "@/lib/types";
+import { Pet, PetData } from "@/lib/types";
 import { usePetContext } from "@/hooks/pet-context-hook";
 import PhoneInput from "react-phone-input-2";
 import { petSchemaWithoutImage, TPetFormData } from "@/lib/validations";
@@ -69,14 +69,18 @@ export default function PetForm({
     // Perform the necessary actions, like adding or editing the pet
     const imageUrl = imageFile || "";
 
+    const petData: PetData = {
+      ...data,
+      imageUrl,
+      ownerPhone: rawPhone,
+      suggestions: [],
+    };
+
     if (actionType === "add") {
-      console.log({ ...data, imageUrl, ownerPhone: rawPhone }, "imageFile");
-      handleAddPet({ ...data, imageUrl, ownerPhone: rawPhone });
+      console.log(petData, "imageFile");
+      handleAddPet(petData);
     } else if (actionType === "edit") {
-      handleEditPet(
-        { ...data, imageUrl, ownerPhone: rawPhone },
-        selectedPet!.id
-      );
+      handleEditPet(petData, selectedPet!.id);
     }
   };
 

@@ -7,14 +7,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export const getSupabaseSignedUrl = async (fileName: string) => {
   const { data, error } = await supabase.storage
-    .from("pets")
+    .from("Pets")
     .createSignedUrl(`public/${fileName}`, 60 * 60);
   return { error, data };
 };
 
 export const uploadSupabaseImage = async (file: File, fileName: string) => {
   const { data, error } = await supabase.storage
-    .from("pets")
+    .from("Pets")
     .upload(`public/${fileName}`, file, {
       cacheControl: "3600",
       upsert: false,

@@ -37,10 +37,6 @@ export default function ResetPasswordPage() {
 
   async function onSubmit(values: z.infer<typeof updatePasswordFormSchema>) {
     setIsLoading(true);
-    // Implement your password reset logic here
-    console.log(values);
-    // Simulating API call
-
     const result = await updatePassword(values.password, hash);
     setIsLoading(false);
     if (result.error) {
