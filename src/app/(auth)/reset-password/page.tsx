@@ -21,7 +21,17 @@ import { updatePasswordFormSchema } from "@/lib/validations";
 import { useRouter } from "next/navigation";
 import { updatePassword } from "@/app/actions/actions";
 
-export default function ResetPasswordPage() {
+import { Suspense } from "react";
+
+export default function ResetPassword() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordPage />
+    </Suspense>
+  );
+}
+
+function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
