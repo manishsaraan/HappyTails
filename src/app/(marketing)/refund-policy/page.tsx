@@ -3,7 +3,7 @@ import React from "react";
 
 export default function RefundPolicy() {
   return (
-    <main className="bg-[#5DC9A8] min-h-screen flex flex-col xl:flex-row justify-center items-center gap-10">
+    <main className="bg-appBGPrimary text-appBlack min-h-screen flex flex-col xl:flex-row justify-center items-center gap-10">
       <section>
         <div className="flex flex-col items-center">
           <Logo />

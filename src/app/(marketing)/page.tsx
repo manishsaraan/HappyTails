@@ -6,9 +6,9 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="bg-[#5DC9A8] min-h-screen flex flex-col items-center gap-10">
+    <main className="bg-appBGPrimary min-h-screen flex flex-col items-center gap-10">
       {/* Hero Section */}
-      <div className="flex flex-col items-center text-center mt-20">
+      <div className="flex flex-col items-center text-center mt-20 text-appBlack">
         <Logo className="h-[100px] w-[100px] mb-4" />
         <h1 className="text-5xl font-semibold my-6 max-w-[600px] leading-[1.2]">
           Manage Pets, Delight Owners with HappyTails
@@ -19,7 +19,7 @@ export default function Home() {
         </p>
         <div className="mt-10 space-x-3">
           <Button
-            className="hover:bg-[#5DC9A8] px-8 py-6 hover:text-white"
+            className="hover:bg-[#5DC9A8] bg-btnPrimary px-8 py-6 hover:text-white"
             asChild
           >
             <Link className="text-xl" href={"/signup"}>
@@ -51,59 +51,61 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="mt-20 px-10 w-full mb-20">
-        <div className="text-5xl font-semibold text-center mb-10">Features</div>
+        <div className="text-5xl font-semibold text-center mb-10 italic">
+          Features
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-[80%] mx-auto">
-          <div className="bg-white px-6 pb-10 pt-6 rounded-lg shadow-md">
-            <h3 className="text-2xl font-semibold text-center mb-2">
+          <div className="bg-[#F9F9F9] px-6 pb-10 pt-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-appBlack w-[70%] mx-auto">
               Easy Pet Tracking and Management
             </h3>
-            <p className="mt-2 text-xl">
+            <p className="text-lg text-center text-appBlack leading-[1.5]">
               Easily log pet details, owner information, and notes with our
               intuitive system designed for seamless pet daycare management.
             </p>
           </div>
-          <div className="bg-white px-6 pb-10 pt-6 rounded-lg shadow-md">
-            <h3 className="text-3xl font-semibold text-center mb-2">
+          <div className="bg-[#F9F9F9] px-6 pb-10 pt-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-appBlack w-[70%] mx-auto">
               AI-Generated Personalized Emails
             </h3>
-            <p className="mt-2 text-xl">
+            <p className="text-lg text-center text-appBlack leading-[1.5]">
               Our AI analyzes pet details and notes to automatically craft
               customized email updates for pet owners, keeping them informed.
             </p>
           </div>
-          <div className="bg-white px-6 pb-10 pt-6 rounded-lg shadow-md">
-            <h3 className="text-3xl font-semibold text-center mb-2">
-              Built with the latest technology
+          <div className="bg-[#F9F9F9] px-6 pb-10 pt-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-appBlack w-[70%] mx-auto">
+              Built with the Latest Technology
             </h3>
-            <p className="mt-2 text-xl">
+            <p className="text-lg text-center text-appBlack leading-[1.5]">
               Our platform is built on the latest Next.js and TypeScript
               frameworks, ensuring a secure and scalable solution for pet
               daycare management.
             </p>
           </div>
-          <div className="bg-white px-6 pb-10 pt-6 rounded-lg shadow-md">
-            <h3 className="text-3xl font-semibold text-center mb-2">
-              Lifetime Access
+          <div className="bg-[#F9F9F9] px-6 pb-10 pt-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-appBlack w-[70%] mx-auto">
+              Lifetime Access with 1-time Payment
             </h3>
-            <p className="mt-2 text-xl">
+            <p className="text-lg text-center text-appBlack leading-[1.5]">
               Purchase once and enjoy lifetime access to the app, ensuring
               long-term efficiency for your pet daycare without recurring fees.
             </p>
           </div>
-          <div className="bg-white px-6 pb-10 pt-6 rounded-lg shadow-md">
-            <h3 className="text-3xl font-semibold text-center mb-2">
-              Easy way to track pet details
+          <div className="bg-[#F9F9F9] px-6 pb-10 pt-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-appBlack w-[70%] mx-auto">
+              Easy Way to Track Pet Details
             </h3>
-            <p className="mt-2 text-xl">
+            <p className="text-lg text-center text-appBlack leading-[1.5]">
               Upload and store images of each pet for quick identification,
               helping you create a personalized experience for your clients.
             </p>
           </div>
-          <div className="bg-white px-6 pb-10 pt-6 rounded-lg shadow-md">
-            <h3 className="text-3xl font-semibold text-center mb-2">
+          <div className="bg-[#F9F9F9] px-6 pb-10 pt-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-appBlack w-[70%] mx-auto">
               Checkout with Behavior Notes
             </h3>
-            <p className="mt-2 text-xl">
+            <p className="text-lg text-center text-appBlack leading-[1.5]">
               Record pet behavior during checkout, allowing you to provide
               valuable insights to pet owners after their daycare visit.
             </p>
@@ -111,8 +113,23 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="flex   flex-col items-center gap-10 px-10 pb-10 pt-8 rounded-lg text-center">
+        <h3 className="text-5xl font-bold mb-4 text-appBlack">
+          Get started to manage your pet daycare
+        </h3>
+
+        <Button
+          className="hover:bg-[#5DC9A8] bg-btnPrimary px-8 py-6 hover:text-white"
+          asChild
+        >
+          <Link className="text-xl" href={"/signup"}>
+            Get Started
+          </Link>
+        </Button>
+      </section>
+
       {/* Footer */}
-      <AppFooter className="absolute bottom-0 w-full" />
+      <AppFooter className=" bottom-0 w-full" />
     </main>
   );
 }

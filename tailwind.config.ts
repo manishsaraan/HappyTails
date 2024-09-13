@@ -20,6 +20,9 @@ const config = {
     extend: {
       colors: {
         light: "rgba(0, 0, 0, 0.8)",
+        appBlack: "#333333",
+        btnPrimary: "#FF8474",
+        appBGPrimary: "#D5F5E3",
       },
       keyframes: {
         "caret-blink": {

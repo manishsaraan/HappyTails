@@ -73,7 +73,7 @@ export default function PetForm({
       ...data,
       imageUrl,
       ownerPhone: rawPhone,
-      suggestions: [],
+      suggestions: null,
     };
 
     if (actionType === "add") {

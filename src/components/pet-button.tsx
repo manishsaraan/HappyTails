@@ -50,7 +50,7 @@ export default function PetButton({
     <Dialog open={open} onOpenChange={setOpen}>
       {actionType === "add" ? (
         <Button
-          className="h-14 w-14"
+          className="h-14 w-14 bg-btnPrimary"
           size={"icon"}
           onClick={() => {
             setOpen(true);

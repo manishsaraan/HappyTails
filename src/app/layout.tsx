@@ -18,8 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body
-        className={`${inter.className} text-sm text-zinc-900 bg-[#e5e8ec] min-h-screen`}
+        className={`${inter.className} text-sm text-zinc-900 bg-[#D5F5E3] min-h-screen`}
       >
         <SessionProvider>{children}</SessionProvider>
         <Toaster position="top-right" />
