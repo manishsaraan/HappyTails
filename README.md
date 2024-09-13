@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+  	<img height="100" src="./.github/logo.png" alt="HappyTails" /> <br>
+</h1>
 
-## Getting Started
+<p align="center">
+  <a href="https://github.com/manishsaraan/happytails">
+    <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg" alt="contributions" />
+  </a> 
+  <a href="https://github.com/manishsaraan/happytails/blob/master/license.md">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license-mit" />
+  </a>
+  <a href="https://app.netlify.com/sites/happytails/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/94515c0c-61cd-4a83-a415-c818ede2c15c/deploy-status" alt="netlify deploy status" />
+  </a>
+</p>
 
-First, run the development server:
+<p align="center">
+  <b>Manage your pets with ease</b></br>
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<p align="center">
+  <br><b>HappyTails</b> helps pet daycare owners <b>manage pets</b>, log details, and send personalized <b>AI-driven updates</b> to pet parents.
+  <a href="https://happytails.app">Visit Site</a>
+</p>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<p align="center">
+  <img alt="Landing Page" src="./.github/full-img.png">
+  <b>Landing Page</b><br>
+  <sub>💥 Landing page with pricing and features 💥</sub>
+</p>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<p align="center">
+  <img alt="Dashboard" src="./.github/dashboard.png">
+  <b>Dashboard</b><br>
+  <sub>💥 Dashboard with search, pet list, add pet and stats. 💥</sub>
+</p>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<p align="center">
+  <img alt="Personalize AI Thank You Emails" src="./.github/ai-email.png">
+  <b>Personalize AI Thank You Emails</b><br>
+  <sub>💥 HappyTails uses AI to personalize thank you emails for pet parents. 💥</sub>
+</p>
 
-## Learn More
+## How to run project
 
-To learn more about Next.js, take a look at the following resources:
+- Clone repo with `git clone https://github.com/manishsaraan/happytails.git`
+- Install dependencies with `yarn install`
+- Run project with `yarn start`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Visit: http://localhost:3000 to view the project
