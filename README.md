@@ -20,11 +20,11 @@
 
 <p align="center">
   <br><b>HappyTails</b> helps pet daycare owners <b>manage pets</b>, log details, and send personalized <b>AI-driven updates</b> to pet parents.
-  <a href="https://happytails.app">Visit Site</a>
+  <a href="https://happy-tails-one.vercel.app/">Visit Site</a>
 </p>
 
 <p align="center">
-  <img alt="Landing Page" src="./.github/full-img.png">
+  <img alt="Landing Page" src="./.github/full-2.png">
   <b>Landing Page</b><br>
   <sub>💥 Landing page with pricing and features 💥</sub>
 </p>
