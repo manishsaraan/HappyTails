@@ -15,7 +15,7 @@ export default function Home() {
         </h1>
         <p className="text-2xl font-medium max-w-[700px]">
           Easily track pets and send personalized updates with AI-driven
-          insights. Get lifetime of access for {"\u20B9"}2999
+          insights. Get lifetime of access for $199
         </p>
         <div className="mt-10 space-x-3">
           <Button

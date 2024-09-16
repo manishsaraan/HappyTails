@@ -25,14 +25,11 @@ export default function Payment({
       <H1>One time payment is required to access HappyTails</H1>
       {!success ? (
         <div className="flex flex-col items-center justify-center space-y-2">
-          <p className="text-sm text-black-400 w-full text-center ">
-            You will be charged {"\u20B9"}2999 after 7 days of free trial.
-          </p>
           <Button
             disabled={isPending}
             onClick={async () => {
               startTransition(() => {
-                startTrial();
+                createCheckoutSession();
               });
             }}
           >

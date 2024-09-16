@@ -32,8 +32,8 @@ export default function TermsConditions() {
             HappyTails offers a 7-day free trial to new users. During the trial
             period, you will have full access to the software without the need
             to provide payment information. After the trial period ends, you
-            must make a one-time payment of {"\u20B9"}2999 to continue using the
-            software indefinitely.
+            must make a one-time payment of $199 to continue using the software
+            indefinitely.
           </p>
 
           <h2 className="text-2xl font-semibold mt-8">
